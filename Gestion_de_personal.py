@@ -129,7 +129,7 @@ def Actualizar_datos(empleados):
             case "carnet":
                 nuevo_carnet = f_original.valor_numerico("Ingrese el nuevo carnet: ")
                 if f_n.val_Two(clave="carnet", valor=nuevo_carnet, empleados=empleados):
-                    print(f"❌ El carnet {nuevo_carnet} ya está en uso.\n")
+                    print(f" El carnet {nuevo_carnet} ya está en uso.\n")
                     if f_original.s_n("¿Desea intentarlo de nuevo? S/N: "):
                         continue
                     break
