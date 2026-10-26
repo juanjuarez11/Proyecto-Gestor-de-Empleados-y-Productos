@@ -1,0 +1,27 @@
+[
+    {
+        "nombre": "Juanito Alcachofa",
+        "correo":"juanito@gmail.com",
+        "carnet": "6B803979",
+        "cargo": "supervisor",
+        "salario":"50000",
+        "estado":"inactivo"
+    
+    },
+    {
+        "nombre": "Chalino",
+        "correo": "Dargs9009 @gmail", 
+        "carnet": "6B5F0535",
+        "cargo": "cajero",
+        "salario": "22000",
+        "estado": "activo"
+    },
+    {
+        "nombre": "Barbanegra",
+        "correo": "Barbon9@gmail", 
+        "carnet": "5556262",
+        "cargo": "tecnico",
+        "salario": "12000",
+        "estado": "activo"
+    }
+]

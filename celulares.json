@@ -1,0 +1,11 @@
+[
+    {
+        "id": "0001",
+        "nombre": "Leche Condensada",
+        "precio": 12000,
+        "cantidad": 50,
+        "marca": "Xiaomi",
+        "categoria": "Celular",
+        "modelo": ""
+    }
+]
