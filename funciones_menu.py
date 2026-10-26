@@ -31,9 +31,9 @@ def cambiar_dato(productos=productos):
         id_buscar = buscar_id_producto(productos,"Ingrese el ID del producto que desea modificar: ")
         
         if id_buscar:
-            print(f"\nProducto encontrado: {id_buscar["nombre"]}")
+            print(f"\nProducto encontrado: {id_buscar["modelo"]}")
             print("¿Qué dato desea modificar?")
-            print("1. Nombre")
+            print("1. Modelo")
             print("2. Precio")
             print("3. Cantidad")
             print("4. Descripción")
@@ -41,8 +41,8 @@ def cambiar_dato(productos=productos):
 
             match opcion_mod:
                 case 1:
-                    nuevo_nombre = fp.validar_nombre("Ingrese el nuevo nombre: ").strip().title()
-                    id_buscar["nombre"] = nuevo_nombre
+                    nuevo_modelo = fp.validar_nombre("Ingrese el nuevo modelo: ").strip().title()
+                    id_buscar["modelo"] = nuevo_modelo
                 case 2:
                     while True:
                         nuevo_precio = fp.decimales("Ingrese el nuevo precio: ")
@@ -61,7 +61,7 @@ def cambiar_dato(productos=productos):
                             break
                 case 4:
                     nueva_desc = input("Ingrese la nueva descripción: ").strip().title()
-                    id_buscar["descripcion"] = nueva_desc
+                    id_buscar["marca"] = nueva_desc
                 case _:
                     print("Opción no válida. No se hicieron cambios.")
             escribir_json("productos",productos)
@@ -72,9 +72,9 @@ def cambiar_dato(productos=productos):
 
 def verificar_id_producto_existencia(productos,mensaje):
     while True:
-        id_producto=validar_id(objeto=productos,mensaje=mensaje)
+        id_producto=validar_imei(objeto=productos,mensaje=mensaje)
         if all(c.isdigit() for c in id_producto) and id_producto != '':
-            existe= any(producto.get("id")==id_producto for producto in productos)
+            existe= any(producto.get("imei")==id_producto for producto in productos)
         
             if existe:
                 print("ID ya registrado.")
@@ -87,10 +87,10 @@ def buscar_id_producto(productos, mensaje):
     if not productos:
         return None
     while True:
-        id_producto = validar_id(objeto=productos, mensaje=mensaje)
+        id_producto = validar_imei(objeto=productos, mensaje=mensaje)
         if id_producto is None:
             return None
-        producto_encontrado = next((p for p in productos if p["id"] == id_producto), None)
+        producto_encontrado = next((p for p in productos if p["imei"] == id_producto), None)
         
         if producto_encontrado is not None:
             print("¡ID encontrado con éxito.!")
@@ -99,12 +99,12 @@ def buscar_id_producto(productos, mensaje):
             print("ID no encontrado.")
         
 
-def validar_id(mensaje, objeto):
+def validar_imei(mensaje, objeto):
     if objeto:
         while True:
-            id=input(mensaje)
-            if all(c.isdigit() or c == '-' for c in id):
-                return id
+            imei=input(mensaje)
+            if all(c.isdigit() for c in imei) and len(imei)==15:
+                return imei
             else:
                 print('Solo se aceptan numeros y guiones para el carnet!!!')
     else:
@@ -118,15 +118,9 @@ def escribir_json(A_nombre,datos_escribir):
     except FileNotFoundError:
         print("Error: El archivo no fue encontrado.")
 
-def actualizar_json(A_nombre,datos_escribir):
-    try:
-        with open(f"{A_nombre}"+".jsonl", "a", encoding="utf-8") as archivo:
-            archivo.write(json.dumps(datos_escribir) + "\n")
-    except FileNotFoundError:
-        print("Error: El archivo no fue encontrado.")
 emp = [
     {
-        "nombre": "Chalino",
+        "modelo": "Chalino",
         "correo": "Dargs9009 @gmail", 
         "carnet": "6B5F0535",
         "cargo": "supervisor",
@@ -134,7 +128,7 @@ emp = [
         "estado": "activo"
     },
     {
-        "nombre": "Barbanegra",
+        "modelo": "Barbanegra",
         "correo": "Barbon9@gmail", 
         "carnet": "5556262",
         "cargo": "empleado",
@@ -143,12 +137,27 @@ emp = [
     }
 ]
 
-def ver_datos_emp():
-    for empleado in emp:
-        print("-" * 30)
-        for clave, valor in empleado.items():
-            print(f"{clave}: {valor}")
-    print("-" * 30)
+def validar_precio():
+    while True:
+        try:
+            precio = fp.decimales("Ingrese el precio del producto: ")
+            if precio > 0:
+                return precio
+            else:
+                print("Debe ingresar un precio mayor a 0.")
+        except ValueError:
+            print("Debe ingresar un valor decimal")
+
+def validar_cantidad():
+    while True:
+        try:
+            cantidad = fp.valor_numerico("Ingrese el stock del producto: ")
+            if cantidad > 0:
+                return cantidad
+            else:
+                print("Debe ingresar un stock mayor a 0.")
+        except ValueError:
+            print("Debe ingresar un valor entero.")
 
 def agregar_productos():
     try:
@@ -159,30 +168,23 @@ def agregar_productos():
         for i in range(1, cant+1):
             print(f"Producto {i}:")
 
-            id_prod =verificar_id_producto_existencia(productos,"Ingrese el ID del producto: ")
+            imei_prod =verificar_id_producto_existencia(productos,"Ingrese el IMEI del producto: ")
         
-            nombre = input("Nombre: ").title()
+            modelo = input("Modelo: ").title()
 
-            while True:
-                precio = fp.decimales("Precio: ")
-                if precio < 0:
-                    print("ERROR. No se acepta un precio negativo")
-                else:
-                    break
+            precio = validar_precio()
 
-            while True:
-                cantidad = fp.valor_numerico("Cantidad: ")
-                if cantidad <= 0:
-                    print("ERROR. No se acepta este valor.")
-                else:
-                    break
-            descrip = input("Descripción: ").title()
+            cantidad = validar_cantidad()
+            marca = input("Marca: ").title()
+            categoria = input("Categoria: ").title()
+
             producto = {
-                "id": id_prod,
-                "nombre": nombre,
+                "imei": imei_prod,
+                "modelo": modelo,
                 "precio": precio,
                 "cantidad": cantidad,
-                "descripcion": descrip}
+                "marca": marca,
+                "categoria":categoria}
             productos.append(producto)
 
         escribir_json("productos",productos)
@@ -200,11 +202,12 @@ def imprimir_factura(detalle_venta, total_general, fecha):
     print("-" * 55)
     
     for item in detalle_venta:
-        nombre = item["nombre"]
+        modelo = item["modelo"]
+        marca = item["marca"]
         cant = item["cantidad_vendida"]
         precio = item["precio"]
         subtotal = item["subtotal"]
-        print(f"{nombre:<20} | {cant:<5} | C${precio:<9.2f} | C${subtotal:<9.2f}")
+        print(f"{marca} | {modelo:<20} | {cant:<5} | C${precio:<9.2f} | C${subtotal:<9.2f}")
         
     print("-" * 55)
     print(f"TOTAL A PAGAR: C${total_general:.2f}")
@@ -219,7 +222,7 @@ def realizar_venta(productos):
     detalle_venta = []
     total_venta = 0
     continuar = True
-    nombre_cliente = fp.validar_nombre("Ingrese el nombre del cliente: ")
+    nombre_cliente = fp.validar_nombre("Ingrese el modelo del cliente: ")
     
     while continuar:
         producto = buscar_id_producto(productos,"Ingrese el ID del producto a vender: ")
@@ -227,11 +230,11 @@ def realizar_venta(productos):
         if producto is None:
             break
 
-        id_prod = producto["id"]
-        nombre = producto["nombre"]
+        imei_prod = producto["imei"]
+        modelo = producto["modelo"]
         precio = producto["precio"]
         cantidad = producto["cantidad"]
-        print(f"Producto: {nombre} | Precio: C${precio} | Existencias actuales: {cantidad}")
+        print(f"Producto: {modelo} | Precio: C${precio} | Existencias actuales: {cantidad}")
 
         cant_vender = fp.valor_numerico("Cuantas unidades desear vender?: ")
         if cant_vender <= 0:
@@ -244,8 +247,8 @@ def realizar_venta(productos):
             subtotal = cant_vender * precio
             total_venta += subtotal
             
-            producto_vendido = {"codigo":id_prod,
-                                "nombre":nombre,
+            producto_vendido = {"imei":imei_prod,
+                                "modelo":modelo,
                                 "precio":precio,
                                 "cantidad_vendida":cant_vender,
                                 "subtotal":subtotal

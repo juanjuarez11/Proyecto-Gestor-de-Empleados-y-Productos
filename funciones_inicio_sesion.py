@@ -27,7 +27,7 @@ def validar_inicio_sesion(lista,nombre,clave):
                     password = maskpass.askpass(prompt="Por favor, Ingrese su contraseña: ",mask="●")
                     if str(password) == str(username_encontrado[clave]):
                         print("CONTRASEÑA CORRECTA. INICIANDO SESIÓN....")
-                        return username["cargo"]
+                        return True
                     else:
                         intentos_password -= 1
                         print(f"CONTRASEÑA INCORRECTA. Intento/os restantes: {intentos_password}")

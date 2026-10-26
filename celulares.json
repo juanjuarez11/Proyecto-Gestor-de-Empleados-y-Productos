@@ -1,11 +1,10 @@
 [
     {
-        "id": "0001",
-        "nombre": "Leche Condensada",
+        "IMEI": "0001",
+        "modelo": "X7 Pro",
         "precio": 12000,
         "cantidad": 50,
-        "marca": "Xiaomi",
-        "categoria": "Celular",
-        "modelo": ""
+        "marca": "POCO",
+        "categoria": "Celular"
     }
 ]
