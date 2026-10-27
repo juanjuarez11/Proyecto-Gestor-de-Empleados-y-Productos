@@ -22,8 +22,10 @@ def mostrar_detalle(orden):
     if orden["falla_encontrada"] != "":
         print(f"Falla encontrada: {orden['falla_encontrada']}")
     print(f"Estado: {orden['estado']}")
+    
     if orden["solucion"] != "":
         print(f"Solucion: {orden['solucion']}")
+        
     if orden["fecha_entrega"] != "":
         print(f"Fecha de entrega: {orden['fecha_entrega']}")
         if orden["dias_garantia"] > 0:
@@ -46,7 +48,7 @@ def mostrar_ordenes_abiertas(ordenes):
     Que hace: muestra las ordenes abiertas, o sea las que todavia pueden cambiar
     de estado.
     Como funciona: recorre las ordenes y muestra con mostrar_detalle las que
-    tienen estados siguientes en ESTADOS. Si no hay ninguna, avisa.
+    tienen estados siguientes en "ESTADOS". Si no hay ninguna, avisa.
     """
     hay_abiertas = False
     for orden in ordenes:
@@ -64,7 +66,7 @@ def mostrar_ordenes_cerradas(ordenes):
     Que hace: muestra las ordenes cerradas (Entregado y No reparado), que ya no
     pueden cambiar de estado.
     Como funciona: recorre las ordenes y muestra con mostrar_detalle las que no
-    tienen estados siguientes en ESTADOS. Si no hay ninguna, avisa.
+    tienen estados siguientes en "ESTADOS". Si no hay ninguna, avisa.
     """
     hay_cerradas = False
     for orden in ordenes:

@@ -45,7 +45,7 @@ def buscar_orden_abierta(ordenes, ticket_compra):
     Que hace: revisa si un equipo ya tiene una orden abierta (que todavia puede
     cambiar de estado). El equipo se identifica por el codigo de su factura.
     Como funciona: recorre las ordenes y busca una con ese codigo de factura cuyo
-    estado tenga estados siguientes en ESTADOS.
+    estado tenga estados siguientes en "ESTADOS".
     Devuelve esa orden, o None si no tiene ninguna abierta.
     """
     for orden in ordenes:
