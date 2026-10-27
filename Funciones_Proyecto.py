@@ -40,27 +40,6 @@ def validar_Fecha(mensaje):
         else:
             return Fecha
 #___________________________________________________________________________________________________________________________
-def validar_anio(mensaje):
-    while True:
-        anio=valor_numerico(mensaje)
-        if anio>=1600 and anio<=2026:
-            return anio
-        else:
-            print('El año no es valido o no esta en el rango establecido!!!')
-#___________________________________________________________________________________________________________________________
-def verificar_id_libros(libros,mensaje):
-    while True:
-        id_libro=input(mensaje)
-        if all(c.isdigit() for c in id_libro) and id_libro != '':
-            existe= any(l["id"] == id_libro for l in libros)        
-            if existe:
-                print("¡Error: El ID del libro que está tratando de registrar ya se encuentra asignado!")
-                continue
-            else:
-                return id_libro
-        else:
-            print('Error: Solo se aceptan numeros para el ID y no puede estar vacio!!!')
-#___________________________________________________________________________________________________________________________
 def verificar_id_usuario(usuarios,mensaje):
     while True:
         id_usuario=validar_id(objeto=usuarios, mensaje=mensaje)
