@@ -3,15 +3,23 @@ import Funciones_Proyecto as fp
 import Gestion_de_personal as Gp
 import datetime as dt
 
+categorias = ["Celular","Laptop","Computadora de Escritorio","Teclado Alambrico",
+              "Teclado Inalambrico","Mouse Alambrico","Mouse Inalambrico"]
+
+marcas_celulares = ["Samsung","Apple","Xiaomi","Google","Huawei","Motorola"]
+marcas_laptops_escritorio = ["Lenovo","HP","Dell","Apple","ASUS","MSI"]
+marcas_teclados = ["Logitech","Microsoft","Keychron","Razer","Corsair","Redragon","VSG"]
+marcas_mouses = ["Logitech","Microsoft","Logitech G","Razer","Corsair","Redragon","SteelSeries"]
+
 def leer_json(A_nombre):
     try:
         with open(f"{A_nombre}.json", "r") as archivo:
             datos = json.load(archivo)
             return datos
     except FileNotFoundError:
-        print('ERROR: El registro de empleados no existe!!!')
+        print("ERROR: El registro de empleados no existe!")
     except Exception:
-        print('Error: Ha ocurrido un error inesperado!!!')
+        print("Error: Ha ocurrido un error inesperado!")
 
 productos = leer_json("celulares")
 def visualizar_inventario(datos):
@@ -22,46 +30,59 @@ def visualizar_inventario(datos):
         for c,v in dato.items():
             print(f"{c}: {v}")
 
-
-def cambiar_dato(productos=productos):
+def validar_categoria(lista,mensaje):
+    while True:
+        lista_ordenada = sorted(lista)
+        categoria = input(mensaje)
+        izquierda = 0
+        derecha = len(lista_ordenada) - 1
+        while izquierda <= derecha:
+            medio = (izquierda + derecha) // 2
+            if lista[medio] == categoria:
+                print("Categoria válida")
+                return categoria
+            elif lista[medio] < categoria:
+                izquierda = medio + 1
+            else:
+                derecha = medio - 1
+        print("La categoria ingresada no es válida.")
+        return validar_categoria(lista,mensaje)
+categoria = validar_categoria(categorias,"Ingrese la categoria: ")
+def cambiar_dato():
     print("="*35)
     print("CAMBIAR DATOS DE UN PRODUCTO")
 
     try:
-        id_buscar = buscar_id_producto(productos,"Ingrese el ID del producto que desea modificar: ")
+        producto_buscar = buscar_id_producto(productos,"Ingrese el ID del producto que desea modificar: ")
         
-        if id_buscar:
-            print(f"\nProducto encontrado: {id_buscar["modelo"]}")
+        if producto_buscar:
+            print(f"\nProducto encontrado: {producto_buscar["modelo"]}")
             print("¿Qué dato desea modificar?")
             print("1. Modelo")
             print("2. Precio")
             print("3. Cantidad")
-            print("4. Descripción")
+            print("4. Marca")
+            print("5. Categoria")
             opcion_mod = fp.valor_numerico("Seleccione una opción (1-4): ")
 
             match opcion_mod:
                 case 1:
                     nuevo_modelo = fp.validar_nombre("Ingrese el nuevo modelo: ").strip().title()
-                    id_buscar["modelo"] = nuevo_modelo
+                    producto_buscar["modelo"] = nuevo_modelo
                 case 2:
-                    while True:
-                        nuevo_precio = fp.decimales("Ingrese el nuevo precio: ")
-                        if nuevo_precio < 0:
-                            print("ERROR. No se acepta este valor")
-                        else:
-                            id_buscar["precio"] = nuevo_precio
-                            break
+                    nuevo_precio = validar_precio()
+                    producto_buscar["precio"] = nuevo_precio
                 case 3:
-                    while True:
-                        nueva_cantidad = fp.valor_numerico("Ingrese la nueva cantidad: ")
-                        if nueva_cantidad <= 0:
-                            print("ERROR. No se acepta un valor negativo o igual a 0.")
-                        else:
-                            id_buscar["cantidad"] = nueva_cantidad
-                            break
+                    nueva_cantidad = validar_cantidad()
+                    producto_buscar["cantidad"] = nueva_cantidad
                 case 4:
-                    nueva_desc = input("Ingrese la nueva descripción: ").strip().title()
-                    id_buscar["marca"] = nueva_desc
+                    nueva_marca = input("Ingrese la nueva marca: ").strip().title()
+                    producto_buscar["marca"] = nueva_marca
+                
+                case 5:
+                    nueva_categoria = validar_categoria(categorias,"Ingrese la nueva categoria: ")
+                    producto_buscar["categoria"] = nueva_categoria
+
                 case _:
                     print("Opción no válida. No se hicieron cambios.")
             escribir_json("productos",productos)

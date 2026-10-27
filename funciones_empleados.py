@@ -11,3 +11,5 @@ def ver_datos(datos):
 def pedir_datos():
     pass
 
+#Funciones de Cajero:
+
