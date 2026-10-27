@@ -18,15 +18,19 @@ while True:
     
 
     for i in range(3):
+        
+        contador = i + 1
+        print(f'Intento {contador}')
+        
         usser = input('Ingrese su usuario: ')
         contrasena = bs.ocultar_escritura('Ingrese su contrasena: ')
         
-        
-    if validar(admins=admins, usser=usser,contrasena=contrasena):
-        print('SISTEMA DESBLOQUEADO')
+        if validar(admins=admins, usser=usser,contrasena=contrasena):
+            print('SISTEMA DESBLOQUEADO')
+            break
+        else:
+            print('Error: La contrasena o el usuario es incorrecto!!!')
+            print(f'Le quedan {3 - contador} intento/s')
     
     else:
         bs.guardar_bloqueo()
-        bloqueo = True, segundos = 20
-        continue
-        
