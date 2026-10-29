@@ -1,6 +1,6 @@
-import json
-import os
-from datetime import date, timedelta
+import json #Usamos json para guardar y recuperar las órdenes en un archivo
+import os # Y os para saber si ese archivo ya existe
+from datetime import date, timedelta #Usamos date para comparar fechas y timedelta para sumar los días de garantía a la fecha de entrega
 
 
 #    Oden por secciones
@@ -65,7 +65,7 @@ def cargar_ordenes():
     para recuperarlas al abrir el programa.
     Como funciona: si el archivo no existe (primera vez) devuelve una lista vacia.
     Si existe, lo abre y json.load convierte su contenido en la lista de ordenes.
-    Si el archivo esta dañado (json.load da ValueError), avisa y devuelve una
+    Si el archivo esta danado (json.load da ValueError), avisa y devuelve una
     lista vacia.
     """
     if not os.path.exists(ARCHIVO_ORDENES): # utiliza libreria os para buscar la ruta de ARCHIVOS ORDENES
