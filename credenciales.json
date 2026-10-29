@@ -14,5 +14,13 @@
         "carnet": 3425,
         "salario": 15000,
         "estado": "activo"
+    },
+    {
+        "nombre": "Eddysiño",
+        "correo": "eddy@gmail.com",
+        "carnet": 3333,
+        "cargo": "Supervisor",
+        "salario": 17000,
+        "estado": "Activo"
     }
 ]

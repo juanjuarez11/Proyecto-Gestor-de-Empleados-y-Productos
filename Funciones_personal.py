@@ -7,7 +7,6 @@ def val_Two(clave, valor, empleados):
     if e.get(clave) == valor:
       return True
   return False
-
 # Valida si el cargo ingresado pertenece a los permitidos.
 def val_cargo(cargo):
   cargos_validos = ["supervisor", "tecnico", "cajero"]
@@ -74,3 +73,10 @@ def cambiar(dato, nuevo_valor, empleados, carnet):
       guardar_credenciales(empleados)
       return i
   return None
+
+# Muestra en formato clave-valor los datos del empleado
+def imprimir(i):
+  print("\n")
+  for e, o in i.items():
+    print(f"{e}: {o}")
+  print("\n")

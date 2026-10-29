@@ -43,7 +43,6 @@ def Alta_integ(empleados):
         if f_original.s_n("¿Desea intentarlo de nuevo? S/N: "):
             continue
         return
-
     # Asignación automática de salario según el cargo
     salario = f_n.asig_salario(cargo=cargo)
 
@@ -180,7 +179,6 @@ def Actualizar_datos(empleados):
                     carnet=carnet,
                 )
                 f_n.imprimir(dic)
-
             case _:
                 print("Opción de dato inválida.")
                 if f_original.s_n("¿Desea intentarlo de nuevo? S/N: "):
@@ -192,3 +190,6 @@ def Actualizar_datos(empleados):
             continue
         break
     break
+Alta_integ(empleados=empleados)
+Actualizar_datos(empleados=empleados)
+Baja_empleado(empleados=empleados)
