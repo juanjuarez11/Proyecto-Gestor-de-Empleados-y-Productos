@@ -1,9 +1,10 @@
 from principal_pi import ejecutar_proceso
 from Gestion_de_personal import admin
-import Funciones_Proyecto as fp, funciones_menu as fm
+import Funciones_Proyecto as fp, funciones_menu as fm, funciones_empleados as fe
 
 productos = fm.leer_json("productos")
-
+empleados = fm.leer_json("credenciales")
+productos = fm.leer_json("productos")
 def menu():
     while True:
         cargo = ejecutar_proceso()
@@ -55,12 +56,13 @@ def menu_supervisor():
             opcion = fp.valor_numerico("Ingrese una opción (1-5): ")
             match opcion:
                 case 1:
-                    fm.ver_datos(fm.emp) if hasattr(fm, 'ver_datos') else print("Función no disponible")
+                    fe.ver_datos(empleados) if hasattr(fe, 'ver_datos') else print("Función no disponible")
                 case 2:
-                    fm.agregar_productos()
+                    fe.agregar_productos(productos)
                 case 3:
-                    pass  
-                    fm.cambiar_dato()
+                    fe.proceso_eliminar(productos)
+                case 4:  
+                    fe.cambiar_dato()
                 case 5:
                     print("Cerrando sesión de supervisor...")
                     break
@@ -78,9 +80,9 @@ def menu_cajero():
         opcion = fp.valor_numerico("Ingrese una opción (1-3): ")
         match opcion:
             case 1:
-                fm.realizar_venta(productos)
+                fe.realizar_venta(productos)
             case 2:
-                fm.visualizar_inventario(productos)
+                fe.visualizar_inventario(productos)
             case 3:
                 print("Saliendo del sistema...")
                 break

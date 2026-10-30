@@ -1,10 +1,11 @@
 [
     {
-        "IMEI": "0001",
-        "modelo": "X7 Pro",
-        "precio": 12000,
-        "cantidad": 50,
-        "marca": "POCO",
-        "categoria": "Celular"
+        "codigo_unico": "1",
+        "imei": "619907226758762",
+        "modelo": "S24 Ultra",
+        "categoria": "Celular",
+        "marca": "Samsung",
+        "precio": 19000.0,
+        "stock": 25
     }
 ]

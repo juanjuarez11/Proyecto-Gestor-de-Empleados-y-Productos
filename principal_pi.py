@@ -36,17 +36,18 @@ def ejecutar_proceso():
             print("Opción no valida.\n")
             continue
         if res in ["empleado","emp"]:
-            if procesar_login_empleado(empleados):
-                break
+            cargo = procesar_login_empleado(empleados)
+            break
         elif res in ["administrador","admin"]:
-            if procesar_login_admin(administradores):
-                break
+            cargo = procesar_login_admin(administradores)
+            break
                 
         elif res in ["cerrar","c"]:
             print("Cerrando sistema...")
+            cargo = "cerrar"
             break
 
         else:
             print("Opción no válida.\n")
 
-    return res
+    return cargo

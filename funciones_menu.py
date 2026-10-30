@@ -2,8 +2,15 @@ import json
 import Funciones_Proyecto as fp
 import Gestion_de_personal as Gp
 import datetime as dt
-import re
+import re, random, string
 
+categorias = ["Celular","Laptop","Computadora de Escritorio","Teclado Alambrico",
+              "Teclado Inalambrico","Mouse Alambrico","Mouse Inalambrico"]
+
+marcas_celulares = ["Samsung","Apple","Xiaomi","Google","Huawei","Motorola"]
+marcas_laptops_escritorio = ["Lenovo","HP","Dell","Apple","ASUS","MSI"]
+marcas_teclados = ["Logitech","Microsoft","Keychron","Razer","Corsair","Redragon","VSG"]
+marcas_mouses = ["Logitech","Microsoft","Logitech G","Razer","Corsair","Redragon","SteelSeries"]
 def leer_json(A_nombre):
     try:
         with open(f"{A_nombre}.json", "r") as archivo:
@@ -21,91 +28,79 @@ def escribir_json(A_nombre,datos_escribir):
     except FileNotFoundError:
         print("Error: El archivo no fue encontrado.")
 
-def validar_categoria(lista,mensaje):
-    while True:
-        lista.sort()
-        categoria = input(mensaje)
-        izquierda = 0
-        derecha = len(lista) - 1
-        while izquierda <= derecha:
-            medio = (izquierda + derecha) // 2
-            if lista[medio] == categoria:
-                print("Categoria válida")
-                return categoria
-            elif lista[medio] < categoria:
-                izquierda = medio + 1
-            else:
-                derecha = medio - 1
-        print("La categoria ingresada no es válida.")
-        return validar_categoria(lista,mensaje)
+def buscar_categoria(lista,elemento):
+    lista_ordenada = sorted(lista)
+    izquierda = 0
+    derecha = len(lista) - 1
+    while izquierda <= derecha:
+        medio = (izquierda + derecha) // 2
+        if lista_ordenada[medio].lower() == elemento.lower():
+            return lista_ordenada[medio]
+        elif lista_ordenada[medio].lower() < elemento.lower():
+            izquierda = medio + 1
+        else:
+            derecha = medio - 1
+    return None
+
+def es_categoria_valida(categoria):
+    return buscar_categoria(categorias, categoria)
+
+def obtener_marcas_por_categoria(categoria):
+    cat = categoria
+    
+    if cat == "Celular":
+        return marcas_celulares
+    elif cat == "Laptop" or cat == "Computadora de Escritorio":
+        return marcas_laptops_escritorio
+    elif cat == "Teclado Alambrico" or cat == "Teclado Inalambrico":
+        return marcas_teclados
+    elif cat == "Mouse Alambrico" or cat =="Mouse Inalambrico":
+        return marcas_mouses
+    else:
+        return []
+
+def es_marca_valida_para_categoria(categoria, marca):
+    lista_marcas = obtener_marcas_por_categoria(categoria)
+    if not lista_marcas:
+        return False
+    else:
+        for i in lista_marcas:
+            if i == marca:
+                return True
+    return buscar_categoria(lista_marcas,"Ingrese la categoria: ")
 
 def es_cedula_valida(cedula):
     formato = r"^[0-9]{3}-[0-9]{6}-[0-9]{4}[A-HJ-NP-Y]$"
     return bool(re.fullmatch(formato, cedula))
 
-def validar_imei(mensaje, objeto):
-    if objeto:
-        while True:
-            imei=input(mensaje)
-            if all(c.isdigit() for c in imei) and len(imei)==15:
-                return imei
-            else:
-                print('Solo se aceptan numeros y guiones para el carnet!!!')
-    else:
-        print('\nNo hay registros por el momento!!!')
-        return False
+def asignar_imei():
+    numeros = str(string.digits)
+    imei = ""
+    for i in range(1,16):
+        imei+=random.choice(numeros)
+    return imei
 
 
-def validar_precio():
+def validar_precio(mensaje="Ingrese el precio: "):
     while True:
         try:
-            precio = fp.decimales("Ingrese el precio del producto: ")
-            if precio > 0:
-                return precio
-            else:
-                print("Debe ingresar un precio mayor a 0.")
+            p = float(input(mensaje))
+            if p > 0:
+                return p
         except ValueError:
-            print("Debe ingresar un valor decimal")
+            return False
 
-def validar_cantidad():
+def validar_cantidad(mensaje="Ingrese la cantidad: "):
     while True:
         try:
-            cantidad = fp.valor_numerico("Ingrese el stock del producto: ")
-            if cantidad > 0:
-                return cantidad
-            else:
-                print("Debe ingresar un stock mayor a 0.")
+            c = int(input(mensaje))
+            if c > 0:
+                return c
         except ValueError:
-            print("Debe ingresar un valor entero.")
-    
+            return False
 
-def verificar_id_producto_existencia(productos,mensaje):
-    while True:
-        id_producto=validar_imei(objeto=productos,mensaje=mensaje)
-        if all(c.isdigit() for c in id_producto) and id_producto != '':
-            existe= any(producto.get("imei")==id_producto for producto in productos)
-        
-            if existe:
-                print("ID ya registrado.")
-            else:
-                return id_producto
-        else:
-            print('Solo se aceptan numeros para el ID y no puede estar vacio!!!')
+def asignar_cp(lista):
+    codigo_unico = len(lista)+1
+    return str(codigo_unico)
 
-
-
-def buscar_id_producto(productos, mensaje):
-    if not productos:
-        return None
-    while True:
-        id_producto = validar_imei(objeto=productos, mensaje=mensaje)
-        if id_producto is None:
-            return None
-        producto_encontrado = next((p for p in productos if p["imei"] == id_producto), None)
-        
-        if producto_encontrado is not None:
-            print("¡ID encontrado con éxito.!")
-            return producto_encontrado
-        else:
-            print("ID no encontrado.")
         
