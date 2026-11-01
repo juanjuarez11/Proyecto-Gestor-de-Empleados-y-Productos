@@ -71,8 +71,7 @@ def inicio_secion_seguro(l_credenciales, t_user, t_credencial):
             print('\n' + '=' * 40 + '\n')
             
             if validar_perfil(l_credenciales= l_credenciales, clave_user= t_user, clave_c= t_credencial, user= user, credencial= credencial):
-                print(f'======Bienvenido {user}======')
-                return True
+                return user,True
                 
             else:
                 print(f'Error: {t_user} o {t_credencial} es incorrecto!!!')
