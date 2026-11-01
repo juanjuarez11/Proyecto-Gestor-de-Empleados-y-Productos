@@ -1,6 +1,6 @@
-import json #Usamos json para guardar y recuperar las órdenes en un archivo
-import os # Y os para saber si ese archivo ya existe
-from datetime import date, timedelta #Usamos date para la fecha de entrega y timedelta para sumar los días de garantía a esa fecha
+import json # guardar y leer las ordenes en un archivo
+import os # saber si ese archivo ya existe
+from datetime import date, timedelta # date: fecha de hoy; timedelta: sumar los dias de garantia
 from Validaciones_servicio_tecnico import (
     validar_garantia_vigente,
     pedir_opcion,
@@ -8,7 +8,7 @@ from Validaciones_servicio_tecnico import (
     pedir_dias_garantia,
     pedir_ticket_garantia,
     pedir_dato_existente,
-) # Las validaciones de los datos de entrada viven en su propio modulo
+) # las validaciones de entrada estan en su propio modulo
 
 
 #    Orden por secciones
@@ -23,27 +23,16 @@ from Validaciones_servicio_tecnico import (
 #    8. OPCION 2 DEL MENU: BUSCAR ORDEN
 #    9. OPCION 3 DEL MENU: ACTUALIZAR ESTADO
 #
-#    Este modulo tiene las funciones que hacen el trabajo de cada opcion del
-#    menu. Importa a validaciones_servicio_tecnico (las validaciones de los datos de entrada)
-#    y lo usa menu_servicio_tecnico (la pantalla y el ciclo del menu).
-#
-#    Regla del archivo: las funciones de logica (buscar, crear, cambiar
-#    estado) NO imprimen nada, solo devuelven un resultado. Los mensajes
-#    los imprimen las funciones de pedir datos, las de mostrar y las
-#    opciones del menu (las que coordinan). Pedir datos y revisar lo que
-#    se escribe es trabajo del modulo validaciones_servicio_tecnico.
+#    Las funciones de logica (buscar, crear, cambiar estado) no imprimen nada.
+#    Los mensajes los imprimen las que piden datos, muestran o coordinan.
 
 
 # ==============================================================
 # SECCION 1: DATOS DEL SERVICIO TECNICO
-#
-# Estos son los datos que usan todas las funciones: los
-# estados y las soluciones.
 # ==============================================================
 
 
-# Cada estado y los estados a los que puede pasar.
-# Si la lista esta vacia, la orden esta cerrada.
+# Cada estado y los estados a los que puede pasar (lista vacia = orden cerrada)
 estados = {
     "En diagnostico": ["Diagnosticado"],
     "Diagnosticado": ["Esperando repuesto", "Reparado", "No reparado"],
@@ -59,10 +48,10 @@ soluciones = {
     "2": "Reposicion total del dinero",
 }
 
-# Archivo donde se guardan las ordenes (queda en la carpeta donde se ejecuta el programa)
+# Archivo donde se guardan las ordenes (en la carpeta donde se ejecuta el programa)
 archivo_de_ordenes = "ordenes_servicio_tecnico.json"
 
-# Campos de la factura que son de control y no se muestran como datos del equipo
+# Campos de la factura que no son datos del equipo y no se muestran
 campos_control = (
     "ticket",
     "codigo_factura",
@@ -74,41 +63,30 @@ campos_control = (
 
 # ==============================================================
 # SECCION 2: GUARDAR Y LEER LAS ORDENES (ARCHIVO .JSON)
-#
-# Estas funciones se encargan de guardar las ordenes en un
-# archivo y de leerlas al abrir el programa. Cada una tiene una
-# funcion que hace el trabajo con el archivo (sin imprimir) y
-# otra que avisa al usuario si algo salio mal.
 # ==============================================================
 
 
 def leer_archivo_ordenes():
     """
-    Que hace: lee del archivo .json las ordenes guardadas (abiertas y cerradas).
-    Como funciona: si el archivo no existe (primera vez) devuelve una lista vacia.
-    Si existe, lo abre y json.load convierte su contenido en la lista de ordenes.
-    Si el archivo esta danado (json.load da ValueError) devuelve None. No imprime nada.
+    Que hace: lee las ordenes guardadas en el archivo .json.
+    Como funciona: sin archivo devuelve []; si esta danado devuelve None. No imprime.
     """
-    if not os.path.exists(archivo_de_ordenes): # comprueba si el archivo donde se guardan las ordenes existe
+    if not os.path.exists(archivo_de_ordenes): # comprueba si el archivo existe
         return []
 
     try:
         with open(archivo_de_ordenes, "r", encoding="utf-8") as archivo:
-            # encoding=utf-8 hace que el programa entienda los acentos y la ñ
-            ordenes = json.load(archivo) # transforma el texto en una estructura de python
+            # utf-8: para que entienda los acentos y la ñ
+            ordenes = json.load(archivo) # convierte el texto en listas y diccionarios
         return ordenes
     except ValueError:
         return None
 
 
-
 def escribir_archivo_ordenes(ordenes):
     """
-    Que hace: escribe en el archivo .json todas las ordenes.
-    Como funciona: abre el archivo para escribir y json.dump guarda en el la lista
-    de ordenes. Con indent=4 el archivo queda ordenado y con ensure_ascii=False se
-    guardan bien las tildes y la ñ. Devuelve True si se pudo escribir y False si
-    no (disco lleno, sin permisos). No imprime nada.
+    Que hace: escribe todas las ordenes en el archivo .json.
+    Como funciona: json.dump guarda la lista; devuelve True si pudo y False si no.
     """
     try:
         with open(archivo_de_ordenes, "w", encoding="utf-8") as archivo:
@@ -118,13 +96,10 @@ def escribir_archivo_ordenes(ordenes):
         return False
 
 
-
 def cargar_ordenes():
     """
-    Que hace: recupera las ordenes guardadas al abrir el programa y avisa si el
-    archivo esta danado.
-    Como funciona: pide la lista a leer_archivo_ordenes. Si el archivo esta danado
-    avisa y devuelve una lista vacia para que el programa siga funcionando.
+    Que hace: recupera las ordenes guardadas al abrir el programa.
+    Como funciona: usa leer_archivo_ordenes; si el archivo esta danado, avisa y devuelve [].
     """
     ordenes = leer_archivo_ordenes()
     if ordenes is None:
@@ -133,56 +108,41 @@ def cargar_ordenes():
     return ordenes
 
 
-
 def guardar_ordenes(ordenes):
     """
-    Que hace: guarda todas las ordenes para que no se pierdan al cerrar el
-    programa y avisa si no se pudo.
-    Como funciona: le pide a escribir_archivo_ordenes que guarde la lista. Si no
-    se pudo escribir, avisa y el programa sigue funcionando.
+    Que hace: guarda las ordenes para que no se pierdan al cerrar el programa.
+    Como funciona: usa escribir_archivo_ordenes; si no pudo guardar, avisa.
     """
     if not escribir_archivo_ordenes(ordenes):
         print("Aviso: no se pudieron guardar las ordenes en el archivo.")
 
 
-
 def preparar_ordenes(ordenes):
     """
     Que hace: deja lista la lista de ordenes al abrir el menu.
-    Como funciona: si la lista llega vacia, le agrega las ordenes guardadas en el
-    archivo (cargar_ordenes). Si ya trae ordenes, no la toca.
+    Como funciona: si esta vacia, le agrega las ordenes del archivo (cargar_ordenes).
     """
     if len(ordenes) == 0:
         ordenes.extend(cargar_ordenes())
 
 
-
 # ==============================================================
-# SECCION 3: BUSCAR ORDEN, ORDENES ABIERTAS Y FACTURAS
-#
-# Estas funciones se encargan de saber si una orden esta abierta,
-# de buscar una orden, de filtrar ordenes y de buscar una factura
-# de la tienda. Ninguna imprime mensajes.
+# SECCION 3: BUSCAR ORDENES Y FACTURAS
 # ==============================================================
 
 
 def esta_abierta(orden):
     """
-    Que hace: dice si una orden esta abierta, o sea si todavia puede cambiar de
-    estado. Es la unica regla de "abierta/cerrada" del programa.
-    Como funciona: mira los estados siguientes de la orden en estados. Devuelve
-    True si tiene alguno (abierta) y False si la lista esta vacia (cerrada).
+    Que hace: dice si una orden todavia puede cambiar de estado.
+    Como funciona: True si su estado tiene estados siguientes en "estados".
     """
     return len(estados[orden["estado"]]) > 0
 
 
-
 def buscar_orden(ordenes, ticket):
     """
-    Que hace: busca una orden por su numero de ticket (ejemplo: T-001).
-    Como funciona: pasa lo escrito a mayuscula (t-001 se busca como T-001),
-    recorre la lista y compara el ticket de cada orden.
-    Devuelve la orden si la encuentra, o None si no existe.
+    Que hace: busca una orden por su ticket (ejemplo: T-001).
+    Como funciona: pasa el ticket a mayuscula y recorre la lista; devuelve la orden o None.
     """
     ticket = ticket.upper()
     for orden in ordenes:
@@ -191,14 +151,10 @@ def buscar_orden(ordenes, ticket):
     return None
 
 
-
 def buscar_orden_abierta(ordenes, ticket_compra):
     """
-    Que hace: revisa si un equipo ya tiene una orden abierta (que todavia puede
-    cambiar de estado). El equipo se identifica por el codigo de su factura.
-    Como funciona: recorre las ordenes y busca una con ese codigo de factura que
-    este abierta (esta_abierta).
-    Devuelve esa orden, o None si no tiene ninguna abierta.
+    Que hace: revisa si un equipo (por su factura) ya tiene una orden abierta.
+    Como funciona: busca una orden con ese codigo de factura que este abierta, o None.
     """
     for orden in ordenes:
         if orden["ticket_compra"] == ticket_compra and esta_abierta(orden):
@@ -206,13 +162,10 @@ def buscar_orden_abierta(ordenes, ticket_compra):
     return None
 
 
-
 def filtrar_ordenes(ordenes, abiertas):
     """
     Que hace: separa las ordenes abiertas de las cerradas.
-    Como funciona: recorre las ordenes y guarda en una lista nueva las que
-    coinciden con lo pedido: abiertas=True devuelve las abiertas y
-    abiertas=False devuelve las cerradas. Devuelve esa lista (puede quedar vacia).
+    Como funciona: abiertas=True devuelve las abiertas y abiertas=False las cerradas.
     """
     resultado = []
     for orden in ordenes:
@@ -221,13 +174,10 @@ def filtrar_ordenes(ordenes, abiertas):
     return resultado
 
 
-
 def buscar_ticket_compra(tickets_tienda, ticket_compra):
     """
-    Que hace: busca en las facturas de la tienda la que tiene el codigo escrito.
-    Como funciona: pasa el codigo a mayuscula y lo compara con el campo
-    codigo_factura de cada factura.
-    Devuelve la factura si la encuentra, o None si no existe.
+    Que hace: busca una factura de la tienda por su codigo.
+    Como funciona: compara el codigo (en mayuscula) con codigo_factura; devuelve la factura o None.
     """
     codigo = ticket_compra.upper()
     for registro in tickets_tienda:
@@ -236,33 +186,24 @@ def buscar_ticket_compra(tickets_tienda, ticket_compra):
     return None
 
 
-
 # ==============================================================
 # SECCION 4: CREAR ORDENES Y CAMBIAR SU ESTADO
-#
-# Estas funciones se encargan de crear una orden y de cambiar
-# su estado, tambien registra el diagnostico, la entrega y cierra
-# la orden con la funcion no reparado. No imprimen mensajes.
 # ==============================================================
 
 
 def generar_ticket(ordenes):
     """
-    Que hace: inventa el numero de ticket de la siguiente orden (T-001, T-002...).
-    Como funciona: cuenta cuantas ordenes hay, le suma 1 y rellena con ceros
-    hasta tener 3 digitos (zfill: 1 -> 001). Devuelve el ticket como texto.
+    Que hace: crea el ticket de la siguiente orden (T-001, T-002...).
+    Como funciona: cuenta las ordenes, suma 1 y rellena con ceros (zfill: 1 -> 001).
     """
     numero = len(ordenes) + 1
     return "T-" + str(numero).zfill(3)
 
 
-
 def crear_orden(ticket, registro_compra, falla):
     """
     Que hace: arma la orden de un equipo que entra a servicio tecnico.
-    Como funciona: crea la orden en estado "En diagnostico" con el ticket que
-    recibe, los datos de la factura y la falla del cliente. Solo la devuelve:
-    quien la llama es el que la agrega a la lista (con agregar_orden).
+    Como funciona: crea el diccionario en estado "En diagnostico" y lo devuelve.
     """
     orden = {
         "ticket": ticket,
@@ -279,54 +220,43 @@ def crear_orden(ticket, registro_compra, falla):
     return orden
 
 
-
 def agregar_orden(ordenes, orden):
     """
-    Que hace: agrega una orden nueva a la lista de ordenes.
-    Como funciona: la pone al final de la lista (append).
+    Que hace: agrega una orden a la lista de ordenes.
+    Como funciona: la pone al final con append.
     """
     ordenes.append(orden)
 
 
-
 def actualizar_estado(orden, nuevo_estado):
     """
-    Que hace: cambia el estado de una orden (Esperando repuesto, En diagnostico,
-    Diagnosticado, Reparado, No reparado o Entregado).
-    Como funciona: guarda el nuevo estado en la orden. Nada mas: los datos extra
-    de cada estado los guardan las funciones de abajo.
+    Que hace: cambia el estado de una orden.
+    Como funciona: guarda el nuevo estado en la orden.
     """
     orden["estado"] = nuevo_estado
 
 
-
 def registrar_diagnostico(orden, falla_encontrada):
     """
-    Que hace: pasa la orden a "Diagnosticado" y guarda la falla que encontro el
-    tecnico, que puede ser distinta a la que dijo el cliente.
-    Como funciona: guarda la falla en la orden y cambia el estado.
+    Que hace: pasa la orden a "Diagnosticado" y guarda la falla que encontro el tecnico.
+    Como funciona: guarda la falla y cambia el estado.
     """
     orden["falla_encontrada"] = falla_encontrada
     actualizar_estado(orden, "Diagnosticado")
 
 
-
 def formatear_fecha(fecha):
     """
-    Que hace: convierte una fecha al formato que se guarda y se muestra en las
-    ordenes (dia/mes/anio, ejemplo: 30/10/2026).
-    Como funciona: usa strftime con el formato "%d/%m/%Y". Devuelve el texto.
+    Que hace: convierte una fecha a texto dia/mes/anio (ejemplo: 30/10/2026).
+    Como funciona: usa strftime con el formato "%d/%m/%Y".
     """
     return fecha.strftime("%d/%m/%Y")
-
 
 
 def registrar_entrega(orden, dias_garantia):
     """
     Que hace: pasa la orden a "Entregado" y guarda los datos de la entrega.
-    Como funciona: cambia el estado y guarda la fecha de entrega (hoy), los dias
-    de garantia que se dieron y la fecha en que vence esa garantia (hoy mas los
-    dias de garantia). Las fechas se guardan con formatear_fecha.
+    Como funciona: guarda la fecha de hoy, los dias de garantia y la fecha en que vencen.
     """
     hoy = date.today()
     vencimiento = hoy + timedelta(days=dias_garantia)
@@ -336,34 +266,24 @@ def registrar_entrega(orden, dias_garantia):
     orden["fecha_vencimiento"] = formatear_fecha(vencimiento)
 
 
-
 def marcar_no_reparado(orden, opcion):
     """
-    Que hace: cierra la orden como "No reparado" y guarda lo que elige el cliente
-    (cambio de equipo o devolucion del dinero). Esta orden ya no se entrega.
-    Como funciona: busca la opcion elegida en soluciones, la guarda en la orden y
-    cambia el estado.
+    Que hace: cierra la orden como "No reparado" con la solucion que elige el cliente.
+    Como funciona: guarda la solucion elegida (de "soluciones") y cambia el estado.
     """
     orden["solucion"] = soluciones[opcion]
     actualizar_estado(orden, "No reparado")
 
 
-
 # ==============================================================
 # SECCION 5: MOSTRAR INFORMACION EN PANTALLA
-#
-# Estas funciones se encargan de mostrar en pantalla las
-# ordenes y los datos del equipo.
 # ==============================================================
 
 
 def mostrar_detalle(orden):
     """
-    Que hace: muestra en pantalla todos los datos de una orden, como una tarjeta.
-    Como funciona: imprime los datos que siempre existen (ticket, ticket de
-    compra, IMEI, falla reportada y estado). Los demas solo se imprimen si ya
-    tienen contenido: la falla encontrada, la solucion del cliente y los datos de
-    entrega (fecha y garantia con su fecha de vencimiento, o "sin garantia").
+    Que hace: muestra todos los datos de una orden, como una tarjeta.
+    Como funciona: imprime los datos fijos; falla encontrada, solucion y entrega solo si existen.
     """
     print("-" * 40)
     print(f"Ticket: {orden['ticket']}")
@@ -387,12 +307,10 @@ def mostrar_detalle(orden):
     print("-" * 40)
 
 
-
 def mostrar_lista_ordenes(lista_ordenes, mensaje_vacio):
     """
     Que hace: muestra una lista de ordenes, una tras otra.
-    Como funciona: recorre la lista y muestra cada orden con mostrar_detalle. Si
-    la lista esta vacia, imprime el mensaje que recibio.
+    Como funciona: usa mostrar_detalle con cada una; si la lista esta vacia, imprime el mensaje.
     """
     if len(lista_ordenes) == 0:
         print(mensaje_vacio)
@@ -403,37 +321,28 @@ def mostrar_lista_ordenes(lista_ordenes, mensaje_vacio):
         print()
 
 
-
 def mostrar_ordenes_abiertas(ordenes):
     """
-    Que hace: muestra las ordenes abiertas, o sea las que todavia pueden cambiar
-    de estado.
-    Como funciona: pide las abiertas a filtrar_ordenes y las muestra con
-    mostrar_lista_ordenes. Si no hay ninguna, avisa.
+    Que hace: muestra las ordenes abiertas (las que aun pueden cambiar de estado).
+    Como funciona: las pide a filtrar_ordenes y las muestra; si no hay, avisa.
     """
     abiertas = filtrar_ordenes(ordenes, True)
     mostrar_lista_ordenes(abiertas, "No hay ordenes abiertas.")
 
 
-
 def mostrar_ordenes_cerradas(ordenes):
     """
-    Que hace: muestra las ordenes cerradas (Entregado y No reparado), que ya no
-    pueden cambiar de estado.
-    Como funciona: pide las cerradas a filtrar_ordenes y las muestra con
-    mostrar_lista_ordenes. Si no hay ninguna, avisa.
+    Que hace: muestra las ordenes cerradas (Entregado y No reparado).
+    Como funciona: las pide a filtrar_ordenes y las muestra; si no hay, avisa.
     """
     cerradas = filtrar_ordenes(ordenes, False)
     mostrar_lista_ordenes(cerradas, "No hay ordenes cerradas.")
 
 
-
 def mostrar_datos_equipo(registro):
     """
-    Que hace: muestra los datos del equipo que vienen en la factura, para que el
-    tecnico confirme que es el equipo correcto.
-    Como funciona: recorre los campos de la factura y los imprime, menos los datos
-    de control (campos_control), que no son del equipo.
+    Que hace: muestra los datos del equipo de la factura, para confirmar que es el correcto.
+    Como funciona: imprime los campos de la factura menos los de control (campos_control).
     """
     print("\nDatos del equipo encontrados en la tienda:")
     print("-" * 40)
@@ -443,11 +352,10 @@ def mostrar_datos_equipo(registro):
     print("-" * 40)
 
 
-
 def mostrar_estados(estados_posibles):
     """
     Que hace: muestra los estados a los que puede pasar una orden, numerados.
-    Como funciona: imprime cada estado con su numero, empezando desde 1.
+    Como funciona: imprime cada estado con su numero, desde 1.
     """
     print("\nEstados disponibles:")
     numero = 1
@@ -456,22 +364,15 @@ def mostrar_estados(estados_posibles):
         numero = numero + 1
 
 
-
 # ==============================================================
 # SECCION 6: PEDIR DATOS AL USUARIO
-#
-# Estas funciones se encargan de pedir datos que hay que buscar
-# en las ordenes o en las facturas. Las que solo revisan lo
-# escrito estan en el modulo validaciones_servicio_tecnico.
 # ==============================================================
 
 
 def pedir_orden_existente(ordenes):
     """
-    Que hace: pide un numero de orden y no avanza hasta que exista. Se usa al
-    buscar y al actualizar una orden, para no repetir el mismo codigo.
-    Como funciona: le pasa a pedir_dato_existente la funcion buscar_orden y la
-    lista de ordenes. Devuelve la orden encontrada. Con 0 cancela y devuelve None.
+    Que hace: pide un numero de orden hasta que exista.
+    Como funciona: usa pedir_dato_existente con buscar_orden; con 0 cancela y devuelve None.
     """
     return pedir_dato_existente(
         "Numero de orden (0 para cancelar): ",
@@ -481,14 +382,10 @@ def pedir_orden_existente(ordenes):
     )
 
 
-
 def elegir_estado(estados_posibles):
     """
     Que hace: deja elegir uno de los estados a los que puede pasar una orden.
-    Como funciona: guarda en una lista los numeros de las opciones (1, 2, 3...).
-    Pide el numero con pedir_opcion y, como las listas empiezan en 0, devuelve el
-    estado de la posicion (numero elegido - 1). Los estados se muestran antes con
-    mostrar_estados.
+    Como funciona: pide el numero con pedir_opcion y devuelve ese estado (numero - 1, listas desde 0).
     """
     opciones = []
     for numero in range(1, len(estados_posibles) + 1):
@@ -497,22 +394,15 @@ def elegir_estado(estados_posibles):
     return estados_posibles[int(seleccion) - 1]
 
 
-
 # ==============================================================
 # SECCION 7: OPCION 1 DEL MENU: RECIBIR EQUIPO
-#
-# Estas funciones se encargan de recibir un equipo y crear su
-# orden.
 # ==============================================================
 
 
 def pedir_factura(tickets_tienda):
     """
-    Que hace: pide el codigo de factura del cliente y devuelve su registro de
-    compra.
-    Como funciona: le pasa a pedir_dato_existente la funcion buscar_ticket_compra y
-    la lista de facturas. Si el codigo no existe, avisa. Con 0 cancela y devuelve
-    None.
+    Que hace: pide el codigo de factura del cliente hasta que exista.
+    Como funciona: usa pedir_dato_existente con buscar_ticket_compra; con 0 devuelve None.
     """
     return pedir_dato_existente(
         "Codigo unico de factura (0 para cancelar): ",
@@ -523,17 +413,11 @@ def pedir_factura(tickets_tienda):
     )
 
 
-
 def recibir_equipo(tickets_tienda, ordenes):
     """
-    Que hace: registra el ingreso de un equipo a servicio tecnico, desde que se
-    pide la factura hasta que se crea la orden.
-    Como funciona: solo coordina, cada paso lo hace otra funcion. Si un paso se
-    cancela o falla, termina sin crear la orden. Los pasos son: 1) pedir la
-    factura, 2) pedir el ticket de garantia, 3) revisar que la garantia este
-    vigente, 4) revisar que el equipo no tenga una orden abierta, 5) mostrar los
-    datos del equipo y pedir la falla del cliente, 6) crear la orden, agregarla
-    a la lista y mostrarla.
+    Que hace: registra el ingreso de un equipo a servicio tecnico.
+    Como funciona: coordina los pasos (factura, ticket y vigencia de garantia, orden abierta, falla,
+    crear orden) y termina sin crear la orden si alguno falla o se cancela.
     """
     registro = pedir_factura(tickets_tienda)
     if registro is None:
@@ -566,30 +450,24 @@ def recibir_equipo(tickets_tienda, ordenes):
     mostrar_detalle(orden)
 
 
-
 def recibir_equipo_y_guardar(tickets_tienda, ordenes):
     """
-    Que hace: es la opcion 1 completa del menu: recibe un equipo y guarda las
-    ordenes en el archivo.
+    Que hace: es la opcion 1 completa: recibe el equipo y guarda las ordenes.
     Como funciona: llama a recibir_equipo y despues a guardar_ordenes.
     """
     recibir_equipo(tickets_tienda, ordenes)
     guardar_ordenes(ordenes)
 
 
-
 # ==============================================================
 # SECCION 8: OPCION 2 DEL MENU: BUSCAR ORDEN
-#
-# Estas funciones se encargan de buscar una orden y mostrarla.
 # ==============================================================
 
 
 def buscar_y_mostrar_orden(ordenes):
     """
-    Que hace: es la opcion "Buscar orden" del menu. Muestra los datos de una orden.
-    Como funciona: pide el numero con pedir_orden_existente y, si la encuentra, la
-    muestra con mostrar_detalle. Si el usuario cancela, avisa y termina.
+    Que hace: es la opcion 2 del menu: muestra los datos de una orden.
+    Como funciona: pide el numero y la muestra con mostrar_detalle; si cancela, avisa.
     """
     orden = pedir_orden_existente(ordenes)
     if orden is None:
@@ -598,22 +476,15 @@ def buscar_y_mostrar_orden(ordenes):
     mostrar_detalle(orden)
 
 
-
 # ==============================================================
 # SECCION 9: OPCION 3 DEL MENU: ACTUALIZAR ESTADO
-#
-# Estas funciones se encargan de cambiar el estado de una
-# orden. Cada estado que pide datos extra tiene su propia
-# funcion, y actualizar_orden solo las coordina.
 # ==============================================================
 
 
 def procesar_diagnostico(orden):
     """
     Que hace: pide la falla que encontro el tecnico y pasa la orden a "Diagnosticado".
-    Como funciona: muestra la falla que dijo el cliente, pide la falla encontrada
-    y la guarda con registrar_diagnostico. Devuelve True si se hizo el cambio y
-    False si el usuario cancelo.
+    Como funciona: usa registrar_diagnostico; devuelve True si se hizo y False si se cancelo.
     """
     print(f"\nFalla reportada por el cliente: {orden['falla']}")
     falla_encontrada = pedir_falla("Falla encontrada por el tecnico (0 para cancelar): ")
@@ -623,13 +494,10 @@ def procesar_diagnostico(orden):
     return True
 
 
-
 def procesar_no_reparado(orden):
     """
-    Que hace: pide lo que elige el cliente cuando su equipo no se pudo reparar y
-    cierra la orden como "No reparado".
-    Como funciona: muestra las opciones de soluciones, pide la eleccion con
-    pedir_opcion y la guarda con marcar_no_reparado.
+    Que hace: pide la solucion del cliente y cierra la orden como "No reparado".
+    Como funciona: muestra las soluciones, la elige con pedir_opcion y usa marcar_no_reparado.
     """
     print("\nEl cliente puede elegir:")
     for numero in soluciones:
@@ -638,26 +506,19 @@ def procesar_no_reparado(orden):
     marcar_no_reparado(orden, solucion)
 
 
-
 def procesar_entrega(orden):
     """
     Que hace: pide los dias de garantia y pasa la orden a "Entregado".
-    Como funciona: pide los dias con pedir_dias_garantia y los guarda con
-    registrar_entrega.
+    Como funciona: usa pedir_dias_garantia y registrar_entrega.
     """
     dias = pedir_dias_garantia()
     registrar_entrega(orden, dias)
 
 
-
 def aplicar_cambio_estado(orden, nuevo_estado):
     """
-    Que hace: hace el cambio al estado elegido, pidiendo los datos extra que ese
-    estado necesite.
-    Como funciona: "Diagnosticado" pide la falla encontrada, "No reparado" pide
-    la solucion del cliente, "Entregado" pide los dias de garantia y los demas
-    solo cambian el estado. Devuelve True si se hizo el cambio y False si el
-    usuario cancelo.
+    Que hace: hace el cambio al estado elegido, pidiendo los datos extra que necesite.
+    Como funciona: llama a procesar_*; devuelve True si se hizo y False si se cancelo.
     """
     if nuevo_estado == "Diagnosticado":
         return procesar_diagnostico(orden)
@@ -670,16 +531,10 @@ def aplicar_cambio_estado(orden, nuevo_estado):
     return True
 
 
-
 def actualizar_orden(ordenes):
     """
-    Que hace: es la opcion "Actualizar estado" del menu. Cambia el estado de una
-    orden respetando el flujo permitido.
-    Como funciona: 1) pide la orden. 2) muestra su estado y revisa que este
-    abierta (si esta cerrada, avisa y termina). 3) muestra los estados a los que
-    puede pasar (mostrar_estados) y deja elegir uno (elegir_estado). 4) hace el
-    cambio con aplicar_cambio_estado.
-    5) muestra la orden actualizada.
+    Que hace: es la opcion 3 del menu: cambia el estado de una orden segun el flujo permitido.
+    Como funciona: pide la orden, revisa que este abierta, elige el nuevo estado, lo aplica y la muestra.
     """
     orden = pedir_orden_existente(ordenes)
     if orden is None:
@@ -702,11 +557,9 @@ def actualizar_orden(ordenes):
     mostrar_detalle(orden)
 
 
-
 def actualizar_orden_y_guardar(ordenes):
     """
-    Que hace: es la opcion 3 completa del menu: actualiza el estado de una orden y
-    guarda las ordenes en el archivo.
+    Que hace: es la opcion 3 completa: actualiza el estado y guarda las ordenes.
     Como funciona: llama a actualizar_orden y despues a guardar_ordenes.
     """
     actualizar_orden(ordenes)

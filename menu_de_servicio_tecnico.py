@@ -1,28 +1,23 @@
-import funciones_menu_servicio_tecnico as funciones #Este modulo solo conoce a funciones_menu_servicio_tecnico, que a su vez usa a validaciones_servicio_tecnico
+import funciones_menu_servicio_tecnico as funciones # las funciones de cada opcion del menu
 
 
 #    Orden por secciones
 #
-#    1. PANTALLA DEL MENU DE SERVICIO TECNICO
+#    1. PANTALLA DEL MENU
 #    2. EJECUTAR EL MENU
 #
-#    Este modulo es solo el menu: lo que se ve en pantalla y el ciclo que
-#    pregunta la opcion. El trabajo de cada opcion lo hacen las funciones
-#    de funciones_menu_servicio_tecnico.
+#    Este modulo es solo el menu: lo que se ve y el ciclo que pide la opcion.
 
 
 # ==============================================================
-# SECCION 1: PANTALLA DEL MENU DE SERVICIO TECNICO
-#
-# Estas funciones se encargan de mostrar el titulo y las
-# opciones del menu de servicio tecnico.
+# SECCION 1: PANTALLA DEL MENU
 # ==============================================================
 
 
 def mostrar_titulo(texto):
     """
-    Que hace: muestra un titulo para que el usuario sepa en que parte del menu esta.
-    Como funciona: imprime una linea de "=", el texto centrado y otra linea de "=".
+    Que hace: muestra un titulo para saber en que parte del menu se esta.
+    Como funciona: imprime el texto centrado entre dos lineas de "=".
     """
     print()
     print("=" * 40)
@@ -30,12 +25,10 @@ def mostrar_titulo(texto):
     print("=" * 40)
 
 
-
 def mostrar_menu():
     """
-    Que hace: muestra las opciones principales del servicio tecnico.
-    Como funciona: imprime el titulo y las opciones numeradas. Solo las muestra,
-    la opcion elegida se lee en ejecutar_menu.
+    Que hace: muestra las opciones del servicio tecnico.
+    Como funciona: imprime el titulo y las opciones numeradas.
     """
     mostrar_titulo("SERVICIO TECNICO")
     print("  1. Recibir equipo con ticket de compra")
@@ -47,25 +40,15 @@ def mostrar_menu():
     print("-" * 40)
 
 
-
 # ==============================================================
 # SECCION 2: EJECUTAR EL MENU
-#
-# Esta funcion se encarga de repetir el menu y de llamar a la
-# funcion de la opcion elegida.
 # ==============================================================
 
 
 def ejecutar_menu(tickets_tienda, ordenes):
     """
-    Que hace: es el menu principal del servicio tecnico. El sistema de la tienda lo
-    llama y le entrega la lista de facturas y la lista de ordenes.
-    Como funciona: al iniciar deja lista la lista de ordenes (preparar_ordenes).
-    Luego muestra el menu, pide una opcion y llama a la funcion que le
-    corresponde (1 recibir equipo, 2 buscar orden, 3 actualizar estado, 4 ordenes
-    abiertas, 5 ordenes cerradas). Con 0 termina y regresa al sistema de la
-    tienda. No sabe nada del archivo: guardar las ordenes lo hacen las funciones
-    de las opciones 1 y 3.
+    Que hace: es el menu principal; el sistema de la tienda lo llama con las facturas y las ordenes.
+    Como funciona: repite el menu y llama a la funcion de la opcion elegida hasta que se escribe 0.
     """
     funciones.preparar_ordenes(ordenes)
 
