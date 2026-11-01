@@ -1,2 +1,71 @@
 [
+    {
+        "cliente": "Juan Juarez",
+        "cedula": "086-111108-1000K",
+        "fecha": "30-10-2026 21:59:37",
+        "detalle": [
+            {
+                "codigo": "1",
+                "imei": "619907226758762",
+                "modelo": "S24 Ultra",
+                "marca": "Samsung",
+                "precio": 19000.0,
+                "cantidad_vendida": 2,
+                "subtotal": 38000.0
+            },
+            {
+                "codigo": "2",
+                "imei": "619907226758762",
+                "modelo": "S24 Ultra",
+                "marca": "Samsung",
+                "precio": 19000.0,
+                "cantidad_vendida": 3,
+                "subtotal": 57000.0
+            }
+        ],
+        "total": 95000.0
+    },
+    {
+        "cliente": "Juan Juarez",
+        "cedula": "086-111108-1000K",
+        "fecha": "31-10-2026 19:29:13",
+        "detalle": [
+            {
+                "codigo": "1",
+                "imei": "619907226758762",
+                "modelo": "S24 Ultra",
+                "marca": "Samsung",
+                "precio": 19000.0,
+                "cantidad_vendida": 2,
+                "subtotal": 38000.0
+            },
+            {
+                "codigo": "3",
+                "imei": "358084207214715",
+                "modelo": "Lenovo IdeaPad Slim 3",
+                "marca": "Lenovo",
+                "precio": 30000.0,
+                "cantidad_vendida": 2,
+                "subtotal": 60000.0
+            }
+        ],
+        "total": 98000.0
+    },
+    {
+        "cliente": "Juan",
+        "cedula": "086-111108-1000K",
+        "fecha": "31-10-2026 21:46:51",
+        "detalle": [
+            {
+                "codigo": "1",
+                "imei": "619907226758762",
+                "modelo": "S24 Ultra",
+                "marca": "Samsung",
+                "precio": 19000.0,
+                "cantidad_vendida": 3,
+                "subtotal": 57000.0
+            }
+        ],
+        "total": 57000.0
+    }
 ]

@@ -48,22 +48,25 @@ def menu_supervisor():
             print("   MENÚ DE SUPERVISOR")
             print("="*25)
             print("1. Visualizar datos de empleados.")
-            print("2. Agregar productos.")
-            print("3. Eliminar productos.")
-            print("4. Cambiar datos de productos.")
-            print("5. Cerrar Sesión.")
+            print("2. Visualizar Inventario.")
+            print("3. Agregar productos.")
+            print("4. Eliminar productos.")
+            print("5. Cambiar datos de productos.")
+            print("6. Cerrar Sesión.")
             
-            opcion = fp.valor_numerico("Ingrese una opción (1-5): ")
+            opcion = fp.valor_numerico("Ingrese una opción (1-6): ")
             match opcion:
                 case 1:
-                    fe.ver_datos(empleados) if hasattr(fe, 'ver_datos') else print("Función no disponible")
+                    fe.ver_datos(empleados,"EMPLEADOS") if hasattr(fe, 'ver_datos') else print("Función no disponible")
                 case 2:
-                    fe.agregar_productos(productos)
+                    fe.ver_datos(productos,"INVENTARIO")
                 case 3:
+                    fe.agregar_productos(productos)
+                case 4:
                     fe.proceso_eliminar(productos)
-                case 4:  
-                    fe.cambiar_dato()
-                case 5:
+                case 5:  
+                    fe.cambiar_dato(productos)
+                case 6:
                     print("Cerrando sesión de supervisor...")
                     break
                 case _:
@@ -76,14 +79,17 @@ def menu_cajero():
         print("="*25)
         print("1. Realizar Venta.")
         print("2. Visualizar Inventario.")
-        print("3. Cerrar Sesión.")
-        opcion = fp.valor_numerico("Ingrese una opción (1-3): ")
+        print("3. Realizar Arqueo de Caja.")
+        print("4. Cerrar Sesión.")
+        opcion = fp.valor_numerico("Ingrese una opción (1-4): ")
         match opcion:
             case 1:
                 fe.realizar_venta(productos)
             case 2:
-                fe.visualizar_inventario(productos)
+                fe.ver_datos(productos,"INVENTARIO")
             case 3:
+                fe.realizar_arqueo()
+            case 4:
                 print("Saliendo del sistema...")
                 break
             case _:

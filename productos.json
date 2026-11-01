@@ -6,6 +6,15 @@
         "categoria": "Celular",
         "marca": "Samsung",
         "precio": 19000.0,
+        "stock": 20
+    },
+    {
+        "codigo_unico": "4",
+        "imei": "644129597827737",
+        "modelo": "ASUS Vivobook 15",
+        "categoria": "Laptop",
+        "marca": "Asus",
+        "precio": 36500.0,
         "stock": 25
     }
 ]
