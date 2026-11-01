@@ -24,15 +24,7 @@ def imprimir_datos(L_datos, A_nombre):
             print(f'{l}:{i}')
             print('=' * 30)
             
-def generar_n_h(usuario, accion):
-    fecha = dt.today()
-    fecha_formateada = fecha.strftime("%d-%m-%Y %H:%M:%S")
-    return f"[{fecha_formateada}] {usuario}: {accion}"
-    
-def regitrar_accion(historial,usuario, accion):
-    N_historial = generar_n_h(usuario, accion)
-    historial.push(N_historial)
-    
+            
 def agregar_dato_n(datos, n_dato):
     datos.append(n_dato)
     return datos

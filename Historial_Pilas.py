@@ -31,4 +31,12 @@ class PilaHistorial:
         print("\n=== HISTORIAL (De mas reciente a mas antiguo) ===")
         for registro in reversed(self.__items):
             print(registro)
-
+            
+def generar_n_h(usuario, accion):
+    fecha = dt.today()
+    fecha_formateada = fecha.strftime("%d-%m-%Y %H:%M:%S")
+    return f"[{fecha_formateada}] {usuario}: {accion}"
+    
+def regitrar_accion(historial,usuario, accion):
+    N_historial = generar_n_h(usuario, accion)
+    historial.push(N_historial)
