@@ -1,4 +1,5 @@
 import json
+#___________________________________________________________________________________________________________________________
 def decimales(mensaje):
     while True:
         try:
@@ -22,7 +23,7 @@ def letras(mensaje):
         else:
             print('Error: No puede contener numeros ni estar vacio.')
 #___________________________________________________________________________________________________________________________
-def texto_con_guiones(mensaje):
+def numeros_con_guiones(mensaje):
     while True:
         entrada=input(mensaje).strip()
         
@@ -33,8 +34,8 @@ def texto_con_guiones(mensaje):
 #___________________________________________________________________________________________________________________________
 def validar_Fecha(mensaje):
     while True:
-        Fecha=texto_con_guiones(mensaje)
-        if len(Fecha) != 10 or Fecha[2] != '-' or Fecha[5] != '-':
+        Fecha = numeros_con_guiones(mensaje)
+        if len(Fecha) != 10 or Fecha[2] != '-' or Fecha[5] != '-'and all(c.isdigit or c == '-' for c in Fecha):
             print('La fecha debe cumplir con el formato dd-mm-aaaa')
         else:
             return Fecha
