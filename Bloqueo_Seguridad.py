@@ -1,8 +1,6 @@
-import json
+import json, time, maskpass as mp, os
 from datetime import datetime, timedelta
-import time
-import maskpass as mp
-from Funciones_Proyecto import letras
+
 def verificar_bloqueo():
     try:
         with open("bloqueo.json", "r") as archivo:
@@ -57,15 +55,19 @@ def obtener_dato(usuario_datos, dato):
 def inicio_sesion_seguro(l_credenciales, t_user, t_credencial):
     
     while True:
+        
+        os.system('cls' if os.name == 'nt' else 'clear')
         bloqueo,segundos = verificar_bloqueo()
         
         bloqueo_pendiente(bloqueo=bloqueo, segundos=segundos)
         
+        if bloqueo:
+            os.system('cls' if os.name == 'nt' else 'clear')
         
         for i in range(3):
             
             contador = i + 1
-            print('\n' + f'======Intento {contador}======')
+            print('\n' + f'===============Intento {contador}================')
             print('\n' + '=' * 40 + '\n')
             
             user = input(f'Ingrese su {t_user}: ')
