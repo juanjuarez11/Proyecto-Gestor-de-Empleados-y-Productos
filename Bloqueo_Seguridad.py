@@ -45,19 +45,23 @@ def bloqueo_pendiente(bloqueo, segundos):
 def validar_perfil(l_credenciales, clave_user, clave_c, user, credencial):
     for i in l_credenciales:
         if i[clave_user] == user and i[clave_c] == credencial:
-            return True
+            return i
         else:
             continue
     return False
+
+def obtener_dato(usuario_datos, dato):
     
-def inicio_secion_seguro(l_credenciales, t_user, t_credencial):
+    return usuario_datos.get(dato, None)
+    
+def inicio_sesion_seguro(l_credenciales, t_user, t_credencial):
     
     while True:
         bloqueo,segundos = verificar_bloqueo()
-
+        
         bloqueo_pendiente(bloqueo=bloqueo, segundos=segundos)
         
-
+        
         for i in range(3):
             
             contador = i + 1
@@ -70,12 +74,15 @@ def inicio_secion_seguro(l_credenciales, t_user, t_credencial):
             credencial = ocultar_escritura(f'Ingrese su {t_credencial}: ')
             print('\n' + '=' * 40 + '\n')
             
-            if validar_perfil(l_credenciales= l_credenciales, clave_user= t_user, clave_c= t_credencial, user= user, credencial= credencial):
-                return user,True
+            perfil=validar_perfil(l_credenciales= l_credenciales, clave_user= t_user, clave_c= t_credencial, user= user, credencial= credencial)
+            
+            if perfil:
+                cargo = obtener_dato(usuario_datos=perfil, dato='cargo')
+                return user,cargo,True
                 
             else:
                 print(f'Error: {t_user} o {t_credencial} es incorrecto!!!')
                 print(f'Le quedan {3 - contador} intento/s')
-        
+            
         else:
             guardar_bloqueo()

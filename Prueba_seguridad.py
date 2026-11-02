@@ -1,11 +1,12 @@
 import pruebaJSON as pj
 import Bloqueo_Seguridad as bs
 
-admins = pj.leer_json(A_nombre='Administrador')
+emp = pj.leer_json(A_nombre='Empleados')
 inicio_sesion = False
 
-user,inicio_secion = bs.inicio_secion_seguro(l_credenciales=admins, t_user='username', t_credencial='password')
+user,cargo,inicio_sesion = bs.inicio_sesion_seguro(l_credenciales=emp, t_user='nombre', t_credencial='carnet')
 
-while inicio_secion:
+while inicio_sesion:
     print(f'======Bienvenido {user}======')
+    print(cargo)
     break
