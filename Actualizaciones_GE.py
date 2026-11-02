@@ -9,6 +9,7 @@ def imprimir(i):
         print(f"{e}: {o}")
     print("\n")
 
+# ---Funciones encargadas de actualizar los datos---
 def actualizar_nombre(empleados, carnet):
     while True:
         nom = f_original.letras("Nuevo nombre: ")
