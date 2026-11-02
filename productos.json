@@ -6,7 +6,7 @@
         "categoria": "Celular",
         "marca": "Samsung",
         "precio": 19000.0,
-        "stock": 20
+        "stock": 5
     },
     {
         "codigo_unico": "4",
@@ -14,7 +14,7 @@
         "modelo": "ASUS Vivobook 15",
         "categoria": "Laptop",
         "marca": "Asus",
-        "precio": 36500.0,
-        "stock": 25
+        "precio": 50000.0,
+        "stock": 20
     }
 ]

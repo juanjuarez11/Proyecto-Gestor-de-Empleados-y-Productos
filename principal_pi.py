@@ -10,10 +10,10 @@ def mostrar_menu_inicio():
     return fp.letras("Ingrese una opción (administrador/empleado/cerrar): ").strip().lower()
 
 def procesar_login_admin(administradores):
-    exito,cargo_encontrado =fis.validar_inicio_sesion(administradores,"username","password")
+    exito,_ =fis.validar_inicio_sesion(administradores,"username","password")
     if exito:
         print("Sesión de administrador iniciada correctamente.")
-        return cargo_encontrado
+        return "administrador"
     else:
         print("No se pudo iniciar sesión como administrador. Intente nuevamente.\n")
         return None

@@ -67,5 +67,31 @@
             }
         ],
         "total": 57000.0
+    },
+    {
+        "cliente": "Gabriela De Los Angeles Romero Martinez",
+        "cedula": "081-300408-1004X",
+        "fecha": "01-11-2026 20:58:20",
+        "detalle": [
+            {
+                "codigo": "4",
+                "imei": "644129597827737",
+                "modelo": "ASUS Vivobook 15",
+                "marca": "Asus",
+                "precio": 50000.0,
+                "cantidad_vendida": 5,
+                "subtotal": 250000.0
+            },
+            {
+                "codigo": "1",
+                "imei": "619907226758762",
+                "modelo": "S24 Ultra",
+                "marca": "Samsung",
+                "precio": 19000.0,
+                "cantidad_vendida": 15,
+                "subtotal": 285000.0
+            }
+        ],
+        "total": 535000.0
     }
 ]
