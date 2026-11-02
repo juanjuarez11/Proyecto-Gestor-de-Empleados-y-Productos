@@ -1,5 +1,5 @@
 from datetime import datetime as dt
-from pruebaJSON import leer_json as lj, guardar_json as gj
+from Funciones_Proyecto import leer_json as lj, guardar_json as gj
 import os
 
 # 2. La clase Pila (Estructura dinámica)
