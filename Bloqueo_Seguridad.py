@@ -51,6 +51,26 @@ def validar_perfil(l_credenciales, clave_user, clave_c, user, credencial):
 def obtener_dato(usuario_datos, dato):
     
     return usuario_datos.get(dato, None)
+
+def validar_acceso(exito,usuario):
+    if exito:
+        
+        if usuario.get("estado") == "inactivo":
+            print("Acceso denegado: Su usuario está inactivo.")
+            return False
+            
+        cargo = usuario.get("cargo")
+        if cargo is None:
+            print("Acceso concedido como Administrador.")
+            return True
+            
+        elif cargo in ["supervisor", "cajero", "tecnico"]:
+            print(f"Acceso concedido con cargo: {cargo}")
+            return True
+            
+        else:
+            print("Acceso denegado: No tiene un cargo autorizado.")
+            return False
     
 def inicio_sesion_seguro(l_credenciales, t_user, t_credencial):
     
@@ -70,17 +90,21 @@ def inicio_sesion_seguro(l_credenciales, t_user, t_credencial):
             print('\n' + f'===============Intento {contador}================')
             print('\n' + '=' * 40 + '\n')
             
-            user = input(f'Ingrese su {t_user}: ')
+            user = input(f'- Ingrese su {t_user}: ')
             print('\n' + '=' * 40 + '\n')
             
-            credencial = ocultar_escritura(f'Ingrese su {t_credencial}: ')
+            credencial = ocultar_escritura(f'- Ingrese su {t_credencial}: ')
             print('\n' + '=' * 40 + '\n')
             
             perfil=validar_perfil(l_credenciales= l_credenciales, clave_user= t_user, clave_c= t_credencial, user= user, credencial= credencial)
             
             if perfil:
-                cargo = obtener_dato(usuario_datos=perfil, dato='cargo')
-                return user,cargo,True
+                
+                if validar_acceso(exito= True, usuario= perfil) != True:
+                    continue
+                
+                else:
+                    return perfil,True
                 
             else:
                 print(f'Error: {t_user} o {t_credencial} es incorrecto!!!')
