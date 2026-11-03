@@ -1,0 +1,20 @@
+[
+    {
+        "codigo_unico": "1",
+        "imei": "619907226758762",
+        "modelo": "S24 Ultra",
+        "categoria": "Celular",
+        "marca": "Samsung",
+        "precio": 19000.0,
+        "stock": 14
+    },
+    {
+        "codigo_unico": "4",
+        "imei": "644129597827737",
+        "modelo": "ASUS Vivobook 15",
+        "categoria": "Laptop",
+        "marca": "Asus",
+        "precio": 50000.0,
+        "stock": 16
+    }
+]

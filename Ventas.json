@@ -1,0 +1,117 @@
+[
+    {
+        "factura": "F-001",
+        "n_garantia": "G-001",
+        "cliente": "Gabriela Romero",
+        "cedula": "081-300408-1000X",
+        "fecha_actual": "2026-11-02",
+        "hora": "09:31:29 PM",
+        "detalle": [
+            {
+                "codigo": "1",
+                "fecha_garantia": "2027-10-28",
+                "imei": "619907226758762",
+                "modelo": "S24 Ultra",
+                "marca": "Samsung",
+                "precio": 19000.0,
+                "cantidad_vendida": 1,
+                "subtotal": 19000.0
+            }
+        ],
+        "total": 19000.0
+    },
+    {
+        "factura": "F-002",
+        "n_garantia": "G-002",
+        "cliente": "Juan Juarez",
+        "cedula": "086-111108-1000K",
+        "fecha_actual": "2026-11-02",
+        "hora": "09:42:58 PM",
+        "detalle": [
+            {
+                "codigo": "4",
+                "fecha_garantia": "2027-10-28",
+                "imei": "644129597827737",
+                "modelo": "ASUS Vivobook 15",
+                "marca": "Asus",
+                "precio": 50000.0,
+                "cantidad_vendida": 2,
+                "subtotal": 100000.0
+            }
+        ],
+        "total": 100000.0
+    },
+    {
+        "factura": "F-003",
+        "n_garantia": "G-003",
+        "cliente": "Juan Jose Juarez",
+        "cedula": "081-080771-1004X",
+        "fecha_actual": "2026-11-02",
+        "hora": "09:48:02 PM",
+        "detalle": [
+            {
+                "codigo": "1",
+                "fecha_garantia": "2027-10-28",
+                "imei": "619907226758762",
+                "modelo": "S24 Ultra",
+                "marca": "Samsung",
+                "precio": 19000.0,
+                "cantidad_vendida": 2,
+                "subtotal": 38000.0
+            }
+        ],
+        "total": 38000.0
+    },
+    {
+        "factura": "F-004",
+        "n_garantia": "G-004",
+        "cliente": "Denis Arauz",
+        "cedula": "286-110537-1402U",
+        "fecha_actual": "2026-11-02",
+        "hora": "09:52:43 PM",
+        "detalle": [
+            {
+                "codigo": "1",
+                "fecha_garantia": "2027-10-28",
+                "imei": "619907226758762",
+                "modelo": "S24 Ultra",
+                "marca": "Samsung",
+                "precio": 19000.0,
+                "cantidad_vendida": 1,
+                "subtotal": 19000.0
+            }
+        ],
+        "total": 19000.0
+    },
+    {
+        "factura": "F-005",
+        "n_garantia": "G-005",
+        "cliente": "Enrique Llanes",
+        "cedula": "086-230107-1000D",
+        "fecha_actual": "2026-11-02",
+        "hora": "10:07:05 PM",
+        "detalle": [
+            {
+                "codigo": "1",
+                "fecha_garantia": "2027-10-28",
+                "imei": "619907226758762",
+                "modelo": "S24 Ultra",
+                "marca": "Samsung",
+                "precio": 19000.0,
+                "cantidad_vendida": 2,
+                "subtotal": 38000.0
+            },
+            {
+                "codigo": "4",
+                "fecha_garantia": "2027-10-28",
+                "imei": "644129597827737",
+                "modelo": "ASUS Vivobook 15",
+                "marca": "Asus",
+                "precio": 50000.0,
+                "cantidad_vendida": 2,
+                "subtotal": 100000.0
+            }
+        ],
+        "total": 138000.0
+    }
+]
