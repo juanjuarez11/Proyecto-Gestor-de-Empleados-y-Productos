@@ -1,4 +1,4 @@
-import json
+import json, os
 #___________________________________________________________________________________________________________________________
 def decimales(mensaje):
     while True:
@@ -40,19 +40,6 @@ def validar_Fecha(mensaje):
         else:
             return Fecha
 #___________________________________________________________________________________________________________________________
-def verificar_id_usuario(usuarios,mensaje):
-    while True:
-        id_usuario=validar_id(objeto=usuarios, mensaje=mensaje)
-        if  all(c.isdigit() for c in id_usuario) and id_usuario != '':
-            existe= any(usuario['id']==id_usuario for usuario in usuarios)
-        
-            if existe:
-                print("¡Error: El ID de usuario que está tratando de registrar ya se encuentra asignado!")
-            else:
-                return id_usuario
-        else:
-            print('Solo se aceptan numeros para el ID y no puede estar vacio!!!')
-#___________________________________________________________________________________________________________________________
 def validar_nombre(mensaje):
     while True:
             nombre=letras(mensaje)
@@ -60,57 +47,12 @@ def validar_nombre(mensaje):
                 print('El nombre debe tener entre 3 y 50 caracteres')
             else:
                 return nombre.title()
-#___________________________________________________________________________________________________________________________
-def validar_id(mensaje, objeto):
-    if objeto:
-        while True:
-            carnet=input(mensaje)
-            if all(c.isdigit or c == '-' for c in carnet):
-                return carnet
-            else:
-                print('Solo se aceptan numeros y guiones para el carnet!!!')
-    else:
-        print('\nNo hay registros por el momento!!!')
-        return False
-#___________________________________________________________________________________________________________________________
-def verificar_id_usuario_existencia(usuarios,mensaje):
-    while True:
-        id_usuario=input(mensaje)
-        if all(c.isdigit() for c in id_usuario) and id_usuario != '':
-            existe= any(usuario['id']==id_usuario for usuario in usuarios)
-        
-            if existe:
-                return id_usuario
-            else:
-                print('El ID no esta registrado')
-        else:
-            print('Solo se aceptan numeros para el ID y no puede estar vacio!!!')
-#___________________________________________________________________________________________________________________________
-def verificar_id_libro_existencia(libros,mensaje):
-    while True:
-        id_libro=input(mensaje)
-        if all(c.isdigit() for c in id_libro) and id_libro != '':
-            existe= any(libro['id']==id_libro for libro in libros)
-        
-            if existe:
-                return id_libro
-            else:
-                print('El ID no esta registrado')
-        else:
-            print('Solo se aceptan numeros para el ID y no puede estar vacio!!!')
-#___________________________________________________________________________________________________________________________
-def s_n(mensaje):
-    while True:
-        res=input(mensaje).lower()
-        if res == 's' or res == 'n':
-            if res == 's':
-                return True
-            if res == 'n':
-                return False
-        else:
-            print('ERROR: Solo se acepta S o N como respuesta!!!')
 #____________________________________________________________________________________________________________________________
 def leer_json(A_nombre):
+    
+    if not os.path.exists(f'{A_nombre}.json'):
+        return []
+    
     try:
         with open(f"{A_nombre}.json", "r", encoding= "utf-8") as archivo:
             datos = json.load(archivo)
@@ -124,7 +66,6 @@ def leer_json(A_nombre):
     
     except Exception:
         print('Error: Ha ocurrido un error inesperado!!!')
-        
 #____________________________________________________________________________________________________________________________
 def guardar_json(A_nombre, datos):
     try:
@@ -133,19 +74,35 @@ def guardar_json(A_nombre, datos):
     except Exception as e:
         print(f"Error al guardar el archivo: {e}")
 #____________________________________________________________________________________________________________________________
-def imprimir_datos(L_datos, A_nombre):
-    print(f'======Datos de {A_nombre}======')
-    print('=' * 30)
-    contador = 0
-    for datos in L_datos:
-        contador += 1
-        print(f'===={A_nombre} {contador}====')
-        print('=' * 30)
-        for l,i in datos.items():
-            print(f'{l}:{i}')
-            print('=' * 30)
-            
+def imprimir_datos(l_datos):
+        
+    claves = list(l_datos[0].keys())
+    
+    ancho_columna = 18  # Espacio fijo para cada celda
+    ancho_total = len(claves) * (ancho_columna + 3)
+    
+    print('-' * max(ancho_total, 50))
+    header_str = " | ".join([f"{str(clave).capitalize():<{ancho_columna}}" for clave in claves])
+    print(header_str)
+    print('-' * max(ancho_total, 50))
+    
+    for item in l_datos:
+        # Extraemos los valores en el mismo orden de las claves
+        valores = [str(item.get(clave, "")) for clave in claves]
+        fila_str = " | ".join([f"{val:<{ancho_columna}}" for val in valores])
+        print(fila_str)
+        
+    print('-' * max(ancho_total, 50))
+    return True
 #____________________________________________________________________________________________________________________________
 def agregar_dato_n(datos, n_dato):
     datos.append(n_dato)
     return datos
+#____________________________________________________________________________________________________________________________
+def generar_ticket(ordenes):
+    """
+    Que hace: crea el ticket de la siguiente orden (T-001, T-002...).
+    Como funciona: cuenta las ordenes, suma 1 y rellena con ceros (zfill: 1 -> 001).
+    """
+    numero = len(ordenes) + 1 # siguiente numero de orden
+    return "T-" + str(numero).zfill(3) # zfill(3) rellena con ceros: 1 -> 001
