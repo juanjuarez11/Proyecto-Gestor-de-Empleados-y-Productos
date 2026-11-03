@@ -1,27 +1,12 @@
-import json, funciones_menu as fm, datetime as dt, Funciones_Proyecto as fp
+import funciones_menu as fm, datetime as dt, Funciones_Proyecto as fp
+from funciones_menu import categorias
 productos = fm.leer_json("credenciales")
-categorias = ["Celular","Laptop","Computadora de Escritorio","Teclado Alambrico",
-              "Teclado Inalambrico","Mouse Alambrico","Mouse Inalambrico"]
-marcas_celulares = ["Samsung","Apple","Xiaomi","Google","Huawei","Motorola"]
-marcas_laptops_escritorio = ["Lenovo","HP","Dell","Apple","ASUS","MSI"]
-marcas_teclados = ["Logitech","Microsoft","Keychron","Razer","Corsair","Redragon","VSG"]
-marcas_mouses = ["Logitech","Microsoft","Logitech G","Razer","Corsair","Redragon","SteelSeries"]
+
 productos = fm.leer_json("productos")
 
 #funciones de Empleados:
 #Funciones de Supervisor:
-def ver_datos(datos, titulo):
-    print(f"\n--- {titulo} ---")
-    if not datos:
-        print("No hay registros disponibles para mostrar.")
-        print("-" * (len(titulo) + 8))
-        return
-    for indice, item in enumerate(datos, 1):
-        print(f"\n[{indice}] Registro:")
-        for clave, valor in item.items():
-            print(f"  - {clave.capitalize()}: {valor}")
-    print("-" * (len(titulo) + 8))
-
+#Gestiona la interfaz interactiva para ingresar los datos de un nuevo producto en el inventario.
 def agregar_productos(productos):
     print("\n--- AGREGAR NUEVO PRODUCTO ---")
     
@@ -32,7 +17,7 @@ def agregar_productos(productos):
     
     
     while True:
-        print(f"Categorías disponibles: {', '.join(fm.categorias)}")
+        print(f"Categorías disponibles: {', '.join(categorias)}")
         categoria_ingresada = input("Ingrese la categoría del producto: ").strip()
         categoria_encontrada = fm.es_categoria_valida(categoria_ingresada)
         
@@ -73,7 +58,7 @@ def agregar_productos(productos):
     else:
         print("ERROR: No se agregó el producto.")
 
-
+#Controla el flujo por consola para eliminar un producto utilizando su código único.
 def proceso_eliminar(productos):
     while True:
         print("\n--- ELIMINAR PRODUCTO ---")
@@ -95,9 +80,10 @@ def proceso_eliminar(productos):
                 print("Saliendo del módulo de eliminación...")
                 return False
 
+#Permite seleccionar y modificar el modelo, precio o stock de un producto existente.
 def cambiar_dato(productos):
     print("\n"+"="*35)
-    print("   CAMBIAR DATOS DE UN PRODUCTO")
+    print("   CAMBIAR DATO DE UN PRODUCTO")
     print("="*35)
     
     codigo = input("Ingrese el Código único del producto que desea modificar:  ")
@@ -145,13 +131,19 @@ def cambiar_dato(productos):
 
 
 #Funciones de Cajero:
-#Realizar Venta de uno o multiples productos:
+#Administra el proceso interactivo de venta de uno o varios productos, 
+# calculando totales y generando facturas y garantías.
 def realizar_venta(productos):
     print("="*35)
     print(" "*9,"REALIZAR VENTA")
     print("="*35)
+
     detalle_venta = []
     total_venta = 0
+
+    historial_ventas = fm.leer_json("ventas") or []
+    n_fact = fm.asignar_num(historial_ventas,"F")
+    n_garantia = fm.asignar_num(historial_ventas,"G")
 
     nombre_cliente = fp.validar_nombre("Ingrese el nombre del cliente: ")
     cedula_cliente = fm.pedir_y_validar_cedula()
@@ -170,6 +162,7 @@ def realizar_venta(productos):
         imei_prod = producto["imei"]
         modelo = producto["modelo"]
         precio = producto["precio"]
+        categoria = producto["categoria"]
         stock = producto["stock"]
         print(f"Codigo: {codigo_unico} | IMEI: {imei_prod} | Producto: {modelo} | Precio: C${precio} | Existencias actuales: {stock}\n")
 
@@ -180,7 +173,9 @@ def realizar_venta(productos):
             print(f"Error: No hay suficiente stock. Unidades disponibles {producto["stock"]}")
             
         else:
-            item_vendido = fm.calcular_venta(producto,cant_vender)
+            fecha,fecha_vencimiento = fm.calcular_garantia(categoria)
+            hora = dt.datetime.now().strftime("%I:%M:%S %p")
+            item_vendido = fm.calcular_venta(producto,cant_vender,fecha_vencimiento)
             detalle_venta.append(item_vendido)
             
             fm.descontar_inventario(producto,cant_vender)
@@ -192,28 +187,30 @@ def realizar_venta(productos):
 
     if detalle_venta:
         fm.escribir_json("productos", productos)
-        fecha_actual = dt.datetime.now().strftime("%d-%m-%Y %H:%M:%S")
         nueva_venta = {
+            "factura":n_fact,
+            "n_garantia":n_garantia,
             "cliente":nombre_cliente,
             "cedula":cedula_cliente,
-            "fecha": fecha_actual,
+            "fecha_actual": fecha,
+            "hora": hora,
             "detalle": detalle_venta,
             "total": total_venta
         }
 
-        historial_ventas = fm.leer_json("ventas") or []
         historial_ventas.append(nueva_venta)
         fm.escribir_json("ventas",historial_ventas)
-        imprimir_factura(nombre_cliente,cedula_cliente,detalle_venta, total_venta,fecha_actual)
+        imprimir_factura(n_fact,n_garantia,fecha,hora,nombre_cliente,cedula_cliente,detalle_venta, total_venta)
     else:
         print("No se registró ninguna venta.")
 
-#Impresion de la factura
-def imprimir_factura(modelo,cedula,detalle_venta, total_general, fecha):
+#Muestra en pantalla el comprobante detallado de la venta con sus respectivos precios y fechas de garantía.
+def imprimir_factura(n_fact,n_garantia,fecha_actual,hora,cliente,cedula,detalle_venta, total_general):
     print("\n" + "="*55)
-    print(" "*18, "FACTURA DE VENTA")
-    print(f" Fecha y hora: {fecha}")
-    print(f" Cliente: {modelo}")
+    print(" "*18, f"FACTURA DE VENTA {n_fact}")
+    print(f" Fecha y hora: {fecha_actual +" "+ hora}")
+    print(f"Número de Garantía: {n_garantia}")
+    print(f" Cliente: {cliente}")
     print(f" Cédula de Identidad: {cedula}")
     print("="*55)
     print(f"{'PRODUCTO':<22} | {'CANT':<5} | {'PRECIO':<10} | {'SUBTOTAL':<10}")
@@ -225,15 +222,17 @@ def imprimir_factura(modelo,cedula,detalle_venta, total_general, fecha):
         cant = item["cantidad_vendida"]
         precio = item["precio"]
         subtotal = item["subtotal"]
+        fecha_vencimiento = item["fecha_garantia"]
         print(f"{marca} | {modelo:<20} | {cant:<5} | C${precio:<9.2f} | C${subtotal:<9.2f}")
-        
+        print(f"Fecha de Vencimiento de Garantía: {fecha_vencimiento}")
+
     print("-" * 55)
     print(f"TOTAL A PAGAR: C${total_general:.2f}")
     print("="*55)
     print("¡GRACIAS POR SU COMPRA!")
     print("="*55 + "\n")
 
-#Realizar Arqueo de Caja
+#Muestra el desglose de todas las transacciones registradas y el monto total acumulado en caja.
 def realizar_arqueo():
     print("\n" + "="*45)
     print(" "*15 + "ARQUEO DE CAJA")
@@ -245,12 +244,13 @@ def realizar_arqueo():
         print("="*45)
         return
     for indice,venta in enumerate(historial_ventas,1):
-        fecha = venta.get("fecha", "Fecha no registrada")
+        fecha_actual = venta.get("fecha_actual", "Fecha no registrada")
+        hora = venta.get("hora")
         cliente = venta.get("cliente", "General")
         total_venta = venta.get("total", 0.0)
 
         print(f"\n[Venta #{indice}]")
-        print(f"  • Fecha y hora : {fecha}")
+        print(f"  • Fecha y hora : {fecha_actual +" "+hora}")
         print(f"  • Cliente      : {cliente}")
         print(f"  • Subtotal     : C${total_venta:.2f}")
         
@@ -265,3 +265,19 @@ def realizar_arqueo():
     print("\n" + "="*45)
     print(f" TOTAL ACUMULADO EN VENTAS: C${total_general:.2f}")
     print("="*45 + "\n")
+
+#Va en Funciones_Proyecto
+#Permite visualizar los datos que se encuentra en una lista de diccionarios,
+#pasandole como parametros una lista de diccionarios y un titulo para especificar
+#que tipo de registro es
+def ver_datos(datos, titulo):
+    print(f"\n--- {titulo} ---")
+    if not datos:
+        print("No hay registros disponibles para mostrar.")
+        print("-" * (len(titulo) + 8))
+        return
+    for indice, item in enumerate(datos, 1):
+        print(f"\n[{indice}] Registro:")
+        for clave, valor in item.items():
+            print(f"  - {clave.capitalize()}: {valor}")
+    print("-" * (len(titulo) + 8))

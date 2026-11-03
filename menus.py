@@ -5,6 +5,7 @@ import Funciones_Proyecto as fp, funciones_menu as fm, funciones_empleados as fe
 productos = fm.leer_json("productos")
 empleados = fm.leer_json("credenciales")
 productos = fm.leer_json("productos")
+#Controla el flujo principal de ejecución y redirige al menú correspondiente según el rol autenticado.
 def menu():
     while True:
         cargo = ejecutar_proceso()
@@ -22,6 +23,7 @@ def menu():
         else:
             print("Opción no válida o sesión no autorizada.\n")
 
+#Despliega las opciones de gestión, alta y baja de personal para los administradores.
 def menu_administradores():
         while True:
             print("---BIENVENIDO AL SISTEMA---")
@@ -42,6 +44,7 @@ def menu_administradores():
                     print("Saliendo del sistema...")
                     break
 
+#Muestra el menú interactivo para el control de inventario y datos de empleados.
 def menu_supervisor():
         while True:
             print("\n" + "="*25)
@@ -57,7 +60,7 @@ def menu_supervisor():
             opcion = fp.valor_numerico("Ingrese una opción (1-6): ")
             match opcion:
                 case 1:
-                    fe.ver_datos(empleados,"EMPLEADOS") if hasattr(fe, 'ver_datos') else print("Función no disponible")
+                    fe.ver_datos(empleados,"EMPLEADOS")
                 case 2:
                     fe.ver_datos(productos,"INVENTARIO")
                 case 3:
@@ -71,7 +74,8 @@ def menu_supervisor():
                     break
                 case _:
                     print("Opción no válida.")
-            
+
+#Presenta las opciones accesibles para los cajeros, incluyendo ventas, inventario y arqueo.          
 def menu_cajero():
     while True:
         print("\n" + "="*25)
@@ -86,7 +90,7 @@ def menu_cajero():
             case 1:
                 fe.realizar_venta(productos)
             case 2:
-                fe.ver_datos(productos,"INVENTARIO")
+                fp.ver_datos(productos,"INVENTARIO")
             case 3:
                 fe.realizar_arqueo()
             case 4:
@@ -95,7 +99,7 @@ def menu_cajero():
             case _:
                 print("Opción no válida.")
         
-
+#Despliega el menú correspondiente al rol de técnico.
 def menu_tecnico():
     while True:
         print("\n" + "="*25)
