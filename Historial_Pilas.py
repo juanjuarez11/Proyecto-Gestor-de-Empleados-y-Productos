@@ -2,7 +2,13 @@ from datetime import datetime as dt
 from Funciones_Proyecto import leer_json as lj, guardar_json as gj
 import os
 
-# 2. La clase Pila (Estructura dinámica)
+# Modulo encargado de registrar un historial de acciones mediante las pilas (LIFO)
+# Primero en entrar es el ultimo en salir.
+# El modulo cuenta con una clase(Con 7 metodos funcionales y 1 metodo constructor)
+# Cuenta con tres funciones para un registro pas rapido y sencillo.
+
+#____________________________________________________________________________________________________________________________
+# La clase Pila (Estructura dinámica)
 class PilaHistorial:
     def __init__(self):
         self.__items = []
@@ -43,19 +49,25 @@ class PilaHistorial:
         for registro in reversed(self.__items):
             print(registro)
             
-                
+            
     def guardar_json(self, A_nombre="historial"):
         gj(A_nombre, self.__items)
         
+# Funcion encargada de generar el historial con el nombre del user y la accion.
+#____________________________________________________________________________________________________________________________
 def generar_n_a(user, accion):
     fecha = dt.today()
     fecha_formateada = fecha.strftime("%d-%m-%Y %H:%M:%S")
     return f"[{fecha_formateada}] {user}: {accion}"
-    
+
+# Funcion encargada de generar y guardar ese historial 
+#____________________________________________________________________________________________________________________________
 def guardar_accion_historial(historial,user, accion):
     N_historial = generar_n_a(user, accion)
     historial.push(N_historial)
     
+# Funcion encargada de llamar las de arriba y usar una sola fincion para relizar todo el trebajo
+#____________________________________________________________________________________________________________________________
 def registrar_historial(historial,user, accion):
     
     guardar_accion_historial(historial= historial, user= user, accion= accion)

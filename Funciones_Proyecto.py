@@ -1,4 +1,8 @@
 import json, os
+
+# Modulo con funciones de validacion de datos o lectura de archivos reutilizables
+# en cualquier parte del codigo.
+
 #___________________________________________________________________________________________________________________________
 def decimales(mensaje):
     while True:
@@ -47,6 +51,8 @@ def validar_nombre(mensaje):
                 print('El nombre debe tener entre 3 y 50 caracteres')
             else:
                 return nombre.title()
+
+# Funcion encargada de leer un json y retornar los datos.
 #____________________________________________________________________________________________________________________________
 def leer_json(A_nombre):
     
@@ -66,6 +72,9 @@ def leer_json(A_nombre):
     
     except Exception:
         print('Error: Ha ocurrido un error inesperado!!!')
+        
+# Funcion encargada de guardar los datos en un archivo json
+# Fundamental para guardar cambios en datos.
 #____________________________________________________________________________________________________________________________
 def guardar_json(A_nombre, datos):
     try:
@@ -73,6 +82,8 @@ def guardar_json(A_nombre, datos):
             json.dump(datos, archivo, indent=4, ensure_ascii=False)
     except Exception as e:
         print(f"Error al guardar el archivo: {e}")
+        
+# Funcion para imprimir datos en formato de cuadro.
 #____________________________________________________________________________________________________________________________
 def imprimir_datos(l_datos):
         
@@ -94,15 +105,15 @@ def imprimir_datos(l_datos):
         
     print('-' * max(ancho_total, 50))
     return True
+
+# Pequena funcion encargada de agregar algo que no esta en lista.
 #____________________________________________________________________________________________________________________________
 def agregar_dato_n(datos, n_dato):
     datos.append(n_dato)
     return datos
+
+# Funcion encargada de obtener datos de manera segura con .get()
 #____________________________________________________________________________________________________________________________
-def generar_ticket(ordenes):
-    """
-    Que hace: crea el ticket de la siguiente orden (T-001, T-002...).
-    Como funciona: cuenta las ordenes, suma 1 y rellena con ceros (zfill: 1 -> 001).
-    """
-    numero = len(ordenes) + 1 # siguiente numero de orden
-    return "T-" + str(numero).zfill(3) # zfill(3) rellena con ceros: 1 -> 001
+def obtener_dato(usuario_datos, dato):
+    
+    return usuario_datos.get(dato, None)

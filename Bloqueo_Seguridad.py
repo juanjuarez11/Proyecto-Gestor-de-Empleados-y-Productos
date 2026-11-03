@@ -1,6 +1,11 @@
 import json, time, maskpass as mp, os
 from datetime import datetime, timedelta
 
+# Este es el modulo encargado de los bloqueos y validacion de datos de empleados y admins.
+# Se cuanta co 7 funciones de dicadas completamente en seguridad del programa.
+
+# Funcion encargada de verificar si hay un bloqueo sin concluir.
+#____________________________________________________________________________________________________________________________
 def verificar_bloqueo():
     try:
         with open("bloqueo.json", "r") as archivo:
@@ -17,16 +22,21 @@ def verificar_bloqueo():
         
     return False, 0
 
+# Funcion encargada de guardar un bloqueo en json
+#____________________________________________________________________________________________________________________________
 def guardar_bloqueo():
     expiracion = datetime.now() + timedelta(seconds=20)
     with open("bloqueo.json", "w") as archivo:
         json.dump({"expiracion": expiracion.isoformat()}, archivo)
     
-
+# Funcion encargada de ocultar los password y carnets.
+#____________________________________________________________________________________________________________________________
 def ocultar_escritura(mensaje):
     dato = mp.askpass(prompt=mensaje, mask='●')
     return dato
 
+# Funcion encargada de ejecutar un bloqueo pendiente.
+#____________________________________________________________________________________________________________________________
 def bloqueo_pendiente(bloqueo, segundos):
     
     if bloqueo:
@@ -40,6 +50,8 @@ def bloqueo_pendiente(bloqueo, segundos):
     else:
         return
     
+# Funcion encargada de buscar el admin o empleado.
+#____________________________________________________________________________________________________________________________
 def validar_perfil(l_credenciales, clave_user, clave_c, user, credencial):
     for i in l_credenciales:
         if i[clave_user] == user and i[clave_c] == credencial:
@@ -48,10 +60,8 @@ def validar_perfil(l_credenciales, clave_user, clave_c, user, credencial):
             continue
     return False
 
-def obtener_dato(usuario_datos, dato):
-    
-    return usuario_datos.get(dato, None)
-
+# Funcion encargada de validar el acceso por cargos
+#____________________________________________________________________________________________________________________________
 def validar_acceso(exito,usuario):
     if exito:
         
@@ -71,8 +81,10 @@ def validar_acceso(exito,usuario):
         else:
             print("Acceso denegado: No tiene un cargo autorizado.")
             return False
-    
-def inicio_sesion_seguro(l_credenciales, t_user, t_credencial):
+
+# Funcion principal que se encarga de solicitar los datos
+#____________________________________________________________________________________________________________________________
+def login(l_credenciales, t_user, t_credencial):
     
     while True:
         
