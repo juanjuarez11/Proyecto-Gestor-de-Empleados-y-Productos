@@ -90,7 +90,7 @@ def escribir_archivo_ordenes(ordenes):
     """
     try:
         with open(archivo_de_ordenes, "w", encoding="utf-8") as archivo:
-            json.dump(ordenes, archivo, indent=4, ensure_ascii=False)
+            json.dump(ordenes, archivo, indent=4, ensure_ascii=False)# ensure permite caracteres especiales y acentos
         return True
     except OSError:
         return False
@@ -123,7 +123,7 @@ def preparar_ordenes(ordenes):
     Como funciona: si esta vacia, le agrega las ordenes del archivo (cargar_ordenes).
     """
     if len(ordenes) == 0:
-        ordenes.extend(cargar_ordenes())
+        ordenes.extend(cargar_ordenes()) #extend agrega los elementos de una lista al final de la lista actual
 
 
 # ==============================================================
@@ -136,7 +136,7 @@ def esta_abierta(orden):
     Que hace: dice si una orden todavia puede cambiar de estado.
     Como funciona: True si su estado tiene estados siguientes en "estados".
     """
-    return len(estados[orden["estado"]]) > 0
+    return len(estados[orden["estado"]]) > 0# True si esta abierta, False si no (cerrada)
 
 
 def buscar_orden(ordenes, ticket):
@@ -269,7 +269,7 @@ def registrar_entrega(orden, dias_garantia):
 def marcar_no_reparado(orden, opcion):
     """
     Que hace: cierra la orden como "No reparado" con la solucion que elige el cliente.
-    Como funciona: guarda la solucion elegida (de "soluciones") y cambia el estado.
+    Como funciona: guarda la solucion elegida de  ("soluciones") y cambia el estado.
     """
     orden["solucion"] = soluciones[opcion]
     actualizar_estado(orden, "No reparado")
@@ -388,7 +388,7 @@ def elegir_estado(estados_posibles):
     Como funciona: pide el numero con pedir_opcion y devuelve ese estado (numero - 1, listas desde 0).
     """
     opciones = []
-    for numero in range(1, len(estados_posibles) + 1):
+    for numero in range(1, len(estados_posibles) + 1):#suma 1 porque range no incluye el ultimo numero
         opciones.append(str(numero))
     seleccion = pedir_opcion("Nuevo estado: ", opciones)
     return estados_posibles[int(seleccion) - 1]
@@ -404,7 +404,7 @@ def pedir_factura(tickets_tienda):
     Que hace: pide el codigo de factura del cliente hasta que exista.
     Como funciona: usa pedir_dato_existente con buscar_ticket_compra; con 0 devuelve None.
     """
-    return pedir_dato_existente(
+    return pedir_dato_existente(#return para que el programa sepa que eligio el usuario y pueda continuar con el registro
         "Codigo unico de factura (0 para cancelar): ",
         buscar_ticket_compra,
         tickets_tienda,
@@ -502,8 +502,8 @@ def procesar_no_reparado(orden):
     print("\nEl cliente puede elegir:")
     for numero in soluciones:
         print(f"  {numero}. {soluciones[numero]}")
-    solucion = pedir_opcion("Solucion elegida: ", list(soluciones))
-    marcar_no_reparado(orden, solucion)
+    solucion = pedir_opcion("Solucion elegida: ", list(soluciones))#list para extraer las ociones numericas del diccionario y entregarla
+    marcar_no_reparado(orden, solucion)                            #a pedir_opcion en el formato de lista para validar la respuesta del usuario
 
 
 def procesar_entrega(orden):

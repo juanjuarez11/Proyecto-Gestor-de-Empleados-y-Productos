@@ -90,7 +90,7 @@ def validar_dias_garantia(texto):
 
 def leer_texto(mensaje):
     """
-    Que hace: lee lo que escribe el usuario. Es la unica funcion que usa input.
+    Que hace: lee lo que escribe el usuario
     Como funciona: muestra el mensaje y quita los espacios sobrantes (strip).
     """
     return input(mensaje).strip()
