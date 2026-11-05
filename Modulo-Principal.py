@@ -47,5 +47,5 @@ def ejecutar_proceso():
             if menus.menus(historial=historial, user= perfil[t_user], cargo= cargo, productos= productos,ventas=ventas,empleados=empleados) != True:
                 break
 
-if __name__ == '__mein__':
+if __name__ == '__main__':
     ejecutar_proceso()
