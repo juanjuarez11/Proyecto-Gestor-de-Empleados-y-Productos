@@ -1,124 +1,124 @@
-from principal_pi import ejecutar_proceso
-from Gestion_de_personal import admin
-import Funciones_Proyecto as fp, funciones_menu as fm, funciones_empleados as fe
-
-productos = fm.leer_json("productos")
-empleados = fm.leer_json("credenciales")
-productos = fm.leer_json("productos")
+import Funciones_Proyecto as fp, funciones_empleados as fe, Gestion_de_personal as gp
+from Historial_Pilas import registrar_historial as rh
 #Controla el flujo principal de ejecución y redirige al menú correspondiente según el rol autenticado.
-def menu():
+
+def menus(historial, user, cargo, empleados, productos, ventas):
     while True:
-        cargo = ejecutar_proceso()
 
         if cargo == "administrador":
-            menu_administradores()
+            if menu_administradores(historial= historial, user= user, empleados= empleados) != True:
+                return False
         elif cargo == "supervisor":
-            menu_supervisor() 
+            if menu_supervisor(historial= historial, user= user, empleados= empleados, productos= productos) != True:
+                return False
         elif cargo == "cajero":
-            menu_cajero() 
-        elif cargo == "tecnico":
-            menu_tecnico()      
-        elif cargo == "cerrar":
-            break
-        else:
-            print("Opción no válida o sesión no autorizada.\n")
+            if menu_cajero(historial= historial,user= user, productos=productos, ventas= ventas) != True:
+                return False
 
 #Despliega las opciones de gestión, alta y baja de personal para los administradores.
-def menu_administradores():
+def menu_administradores(historial, user, empleados):
         while True:
             print("---BIENVENIDO AL SISTEMA---")
             print("Opciones de Administrador: ")
             print("1. Busqueda y Actualización de Empleados")
             print("2. Dar de Alta Empleados")
             print("3. Dar de Baja Empleados")
-            print("4. Salir del Sistema")
-            opcion = fp.valor_numerico("Escoja una opción (1-4): ")
+            print("4. Visualizar Empleados")
+            print("5. Salir del Sistema")
+            opcion = fp.valor_numerico("Escoja una opción (1-5): ")
             match opcion:
                 case 1:
-                    admin.Busqueda_actualizacion()
+                    exito = gp.Actualizar_datos(empleados= empleados)
+                    if exito:
+                        rh(historial=historial, user= user, accion='Actualizo un empleado')
                 case 2:
-                    admin.Alta_integ()
+                    exito = gp.Alta_integ(empleados= empleados)
+                    if exito:
+                        rh(historial=historial, user= user, accion='Registro un nuevo empleado')
                 case 3:
-                    admin.Baja_empleado()
+                    exito = gp.Baja_empleado(empleados= empleados)
+                    if exito:
+                        rh(historial=historial, user= user, accion='Elimino un empleado')
                 case 4:
+                    fp.imprimir_datos(l_datos=empleados)
+                    rh(historial=historial, user= user, accion='Reviso datos de los empleados')
+                case 5:
                     print("Saliendo del sistema...")
-                    break
+                    rh(historial=historial, user= user, accion='Cerro sesion')
+                    return False
+                case _:
+                    print('Error: Opcion no valida')
+                    if fp.s_n('De Volver al menu de administrador: ') != True:
+                        return False
 
 #Muestra el menú interactivo para el control de inventario y datos de empleados.
-def menu_supervisor():
+def menu_supervisor(historial, user, empleados,productos):
         while True:
             print("\n" + "="*25)
-            print("   MENÚ DE SUPERVISOR")
+            print("----------MENÚ DE SUPERVISOR----------")
             print("="*25)
+            print()
             print("1. Visualizar datos de empleados.")
             print("2. Visualizar Inventario.")
             print("3. Agregar productos.")
             print("4. Eliminar productos.")
             print("5. Cambiar datos de productos.")
             print("6. Cerrar Sesión.")
-            
+            print()
             opcion = fp.valor_numerico("Ingrese una opción (1-6): ")
             match opcion:
                 case 1:
-                    fe.ver_datos(empleados,"EMPLEADOS")
+                    fp.imprimir_datos(l_datos= empleados)
+                    rh(historial=historial, user= user, accion='Reviso datos de los empleados')
                 case 2:
-                    fe.ver_datos(productos,"INVENTARIO")
+                    fp.imprimir_datos(l_datos= productos)
+                    rh(historial=historial, user= user, accion='Reviso datos de los productos')
                 case 3:
-                    fe.agregar_productos(productos)
+                    exito = fe.agregar_productos(productos= productos)
+                    if exito:
+                        rh(historial=historial, user= user, accion='Registro un nuevo producto')
                 case 4:
-                    fe.proceso_eliminar(productos)
+                    exito = fe.proceso_eliminar(productos= productos)
+                    if exito:
+                        rh(historial=historial, user= user, accion='Elimino un producto')
                 case 5:  
-                    fe.cambiar_dato(productos)
+                    fe.cambiar_dato(productos= productos)
+                    rh(historial=historial, user= user, accion='Actualizo un producto')
                 case 6:
                     print("Cerrando sesión de supervisor...")
-                    break
+                    rh(historial=historial, user= user, accion='Cerro sesion')
+                    return False
                 case _:
                     print("Opción no válida.")
 
 #Presenta las opciones accesibles para los cajeros, incluyendo ventas, inventario y arqueo.          
-def menu_cajero():
+def menu_cajero(historial, user, productos, ventas):
     while True:
         print("\n" + "="*25)
-        print("     MENÚ DE CAJERO")
+        print("----------MENÚ DE CAJERO----------")
         print("="*25)
+        print()
         print("1. Realizar Venta.")
         print("2. Visualizar Inventario.")
         print("3. Realizar Arqueo de Caja.")
         print("4. Cerrar Sesión.")
+        print()
         opcion = fp.valor_numerico("Ingrese una opción (1-4): ")
         match opcion:
             case 1:
-                fe.realizar_venta(productos)
+                exito = fe.realizar_venta(productos=productos, ventas= ventas)
+                if exito:
+                    rh(historial=historial, user= user, accion='Realizo una venta')
             case 2:
-                fp.ver_datos(productos,"INVENTARIO")
+                fp.imprimir_datos(l_datos=productos)
+                rh(historial=historial, user= user, accion='Reviso datos de los productos')
             case 3:
-                fe.realizar_arqueo()
+                exito = fe.realizar_arqueo()
+                if exito:
+                    rh(historial=historial, user= user, accion='Realizo un arqueo')
             case 4:
                 print("Saliendo del sistema...")
-                break
+                rh(historial=historial, user= user, accion='Cerro sesion')
+                return False
             case _:
                 print("Opción no válida.")
-        
-#Despliega el menú correspondiente al rol de técnico.
-def menu_tecnico():
-    while True:
-        print("\n" + "="*25)
-        print("     MENÚ DE TÉCNICO")
-        print("="*25)
-        print("1. (Módulo en desarrollo)")
-        print("2. (Módulo en desarrollo)")
-        print("3. Cerrar Sesión.")
-        opcion = fp.valor_numerico("Ingrese una opción (1-3): ")
-        match opcion:
-            case 1:
-                pass
-            case 2:
-                pass
-            case 3:
-                print("Saliendo del sistema...")
-                break
-            case _:
-                print("Opción no válida.")  
-               
-if __name__ == "__main__":
-    menu()

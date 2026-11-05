@@ -1,6 +1,6 @@
-import json
+from Funciones_Proyecto import guardar_json
 import re
-
+import random, string
 # Verifica si el valor ya se encuentra en lista.
 def val_Two(clave, valor, empleados):
     for e in empleados:
@@ -10,12 +10,12 @@ def val_Two(clave, valor, empleados):
 
 # Valida si el cargo ingresado pertenece a los permitidos.
 def val_cargo(cargo):
-    cargos_validos = ["supervisor", "tecnico", "cajero"]
+    cargos_validos = ["supervisor", "cajero", "limpieza", "asistente", "presentador"]
     return cargo.lower() in cargos_validos
 
 # Retorna el salario predeterminado según el cargo.
 def asig_salario(cargo):
-    salarios = {"supervisor": 17000, "tecnico": 14000, "cajero": 13000}
+    salarios = {"supervisor": 17000, "asistente": 14000, "cajero": 13000, "presentador": 10000, "limpieza": 9000}
     return salarios.get(cargo.lower(), 0)
 
 # Valida que el salario esté dentro del rango permitido (10k - 20k).
@@ -33,13 +33,6 @@ def val_formato_correo(correo):
     return bool(re.match(patron, correo.strip()))
 
 
-# 2. CAPA DE PERSISTENCIA (Manejo de archivos):
-
-# Guarda la lista de empleados en el archivo JSON de forma segura
-def guardar_credenciales(empleados, archivo="credenciales.json"):
-    with open(archivo, "w", encoding="utf-8") as f:
-        json.dump(empleados, f, ensure_ascii=False, indent=4)
-
 
 # 3. CAPA DE OPERACIONES DE DATOS (Modifican la lista):
 
@@ -54,7 +47,7 @@ def registrar(nombre, correo, carnet, cargo, salario, estado, empleados):
         "estado": estado,
     }
     empleados.append(nuevo_registro)
-    guardar_credenciales(empleados)
+    guardar_json(A_nombre='Empleados',datos=empleados)
     return True
 
 # Elimina un empleado de la lista según su carnet.
@@ -62,7 +55,7 @@ def eliminar(carnet, empleados):
     for i in empleados:
         if i["carnet"] == carnet:
             empleados.remove(i)
-            guardar_credenciales(empleados)
+            guardar_json(A_nombre='Empleados',datos=empleados)
             return True
     return False
 
@@ -71,6 +64,16 @@ def cambiar(dato, nuevo_valor, empleados, carnet):
     for i in empleados:
         if i["carnet"] == carnet:
             i[dato] = nuevo_valor
-            guardar_credenciales(empleados)
+            guardar_json(A_nombre='Empleados',datos=empleados)
             return i
     return None
+
+def asignar_carnet(empleados):
+    while True:
+        caracteres = string.ascii_uppercase + string.digits
+        
+        carnet = ''.join(random.choice(caracteres) for i in range(8))
+        if val_Two(clave='carnet', valor= carnet, empleados= empleados) != True:
+            return carnet
+        else:
+            continue

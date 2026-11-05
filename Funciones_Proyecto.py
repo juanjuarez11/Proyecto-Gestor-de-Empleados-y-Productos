@@ -68,7 +68,7 @@ def leer_json(A_nombre):
             
     except FileNotFoundError:
         print(f'ERROR: El registro de {A_nombre} no existe!!!')
-        return False
+        return []
     
     except Exception:
         print('Error: Ha ocurrido un error inesperado!!!')
@@ -111,9 +111,23 @@ def imprimir_datos(l_datos):
 def agregar_dato_n(datos, n_dato):
     datos.append(n_dato)
     return datos
-
+#___________________________________________________________________________________________________________________________
+def s_n(mensaje):
+    while True:
+        res=input(mensaje).lower()
+        if res == 's' or res == 'n' or res == 'si' or res == 'no':
+            if res == 's' or res == 'si':
+                return True
+            if res == 'n' or res == 'no':
+                return False
+        else:
+            print('ERROR: Solo se acepta Si o No como respuesta!!!')
 # Funcion encargada de obtener datos de manera segura con .get()
 #____________________________________________________________________________________________________________________________
 def obtener_dato(usuario_datos, dato):
     
     return usuario_datos.get(dato, None)
+
+def imprimir_datos_lista(l_datos):
+    for i in l_datos:
+        print(f'-{i}')

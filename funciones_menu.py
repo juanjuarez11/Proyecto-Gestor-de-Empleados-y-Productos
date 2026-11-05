@@ -3,7 +3,7 @@ import datetime as dt
 import re, random, string
 
 categorias = ["Celular","Laptop","Computadora de Escritorio","Teclado Alambrico",
-              "Teclado Inalambrico","Mouse Alambrico","Mouse Inalambrico"]
+            "Teclado Inalambrico","Mouse Alambrico","Mouse Inalambrico"]
 
 marcas_celulares = ["Samsung","Apple","Xiaomi","Google","Huawei","Motorola"]
 marcas_laptops_escritorio = ["Lenovo","HP","Dell","Apple","ASUS","MSI"]
@@ -25,7 +25,7 @@ def leer_json(A_nombre):
 #Guarda la información actualizada en formato JSON con codificación UTF-8.
 def escribir_json(A_nombre,datos_escribir):
     try:
-        with open(f"{A_nombre}"+".json", "w", encoding="utf-8") as archivo:
+        with open(f"{A_nombre}.json", "w", encoding="utf-8") as archivo:
             json.dump(datos_escribir, archivo, indent= 4, ensure_ascii=False)
     except FileNotFoundError:
         print("Error: El archivo no fue encontrado.")
@@ -105,7 +105,7 @@ def validar_cantidad(c):
 #Busca y retorna un producto específico del inventario usando su código único.
 def buscar_producto_cu(productos,cu_buscar):
     for p in productos:
-        if p.get("codigo_unico") == cu_buscar:
+        if p.get("codigo_unico") == str(cu_buscar):
             return p
     return None
 
@@ -179,7 +179,7 @@ def actualizar_datos_productos(productos,c_u,opcion,nuevo_valor):
             producto["stock"] = int(nuevo_valor)
         case _:
             return False
-    escribir_json("productos",productos)
+    escribir_json("Productos",productos)
     return True
 
 #Guardar datos de productos

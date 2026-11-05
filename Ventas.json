@@ -113,5 +113,26 @@
             }
         ],
         "total": 138000.0
+    },
+    {
+        "factura": "F-006",
+        "n_garantia": "G-006",
+        "cliente": "Denis Arauz",
+        "cedula": "601-120907-1004Q",
+        "fecha_actual": "2026-11-05",
+        "hora": "03:20:48 AM",
+        "detalle": [
+            {
+                "codigo": "1",
+                "fecha_garantia": "2027-10-31",
+                "imei": "619907226758762",
+                "modelo": "S24 Ultra",
+                "marca": "Samsung",
+                "precio": 20000.0,
+                "cantidad_vendida": 1,
+                "subtotal": 20000.0
+            }
+        ],
+        "total": 20000.0
     }
 ]

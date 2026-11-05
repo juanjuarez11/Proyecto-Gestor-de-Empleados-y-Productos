@@ -4,6 +4,21 @@ from datetime import datetime, timedelta
 # Este es el modulo encargado de los bloqueos y validacion de datos de empleados y admins.
 # Se cuanta co 7 funciones de dicadas completamente en seguridad del programa.
 
+def validar_tipo_user(mensaje):
+    t_user = ['Administrador', 'Empleado']
+    
+    user = input(mensaje).capitalize()
+    user.replace(' ', '')
+    
+    if user == 'Cerrar':
+        return user
+    
+    if user in t_user:
+        return user
+    else:
+        print('Error: Tipo de user no valido, ingrese (Administrador o Empleado)!!!')
+        return False
+
 # Funcion encargada de verificar si hay un bloqueo sin concluir.
 #____________________________________________________________________________________________________________________________
 def verificar_bloqueo():
@@ -120,7 +135,27 @@ def login(l_credenciales, t_user, t_credencial):
                 
             else:
                 print(f'Error: {t_user} o {t_credencial} es incorrecto!!!')
+                print('---------------------------------------------------------------------')
+                print('Asegurese de ingresar sus credenciales correctamente!!!')
                 print(f'Le quedan {3 - contador} intento/s')
             
         else:
             guardar_bloqueo()
+            
+def validar_acceso_cargo(exito,usuario):
+    if exito:
+        
+        if usuario.get("estado") == "inactivo":
+            return False
+            
+        cargo = usuario.get("cargo")
+        if cargo is None:
+            cargo = 'administrador'
+            return cargo
+            
+        elif cargo in ["supervisor", "cajero"]:
+            return cargo
+            
+        else:
+            return False
+    

@@ -1,8 +1,5 @@
 import funciones_menu as fm, datetime as dt, Funciones_Proyecto as fp
 from funciones_menu import categorias
-productos = fm.leer_json("credenciales")
-
-productos = fm.leer_json("productos")
 
 #funciones de Empleados:
 #Funciones de Supervisor:
@@ -13,12 +10,15 @@ def agregar_productos(productos):
     c_p = fm.asignar_cp(productos)
 
     imei = fm.asignar_imei()
-    modelo =input("Ingrese el modelo del producto: ")
-    
     
     while True:
-        print(f"Categorías disponibles: {', '.join(categorias)}")
-        categoria_ingresada = input("Ingrese la categoría del producto: ").strip()
+        print(f"Categorías disponibles:")
+        print('-' * 60)
+        print()
+        fp.imprimir_datos_lista(l_datos= categorias)
+        print()
+        print('-' * 60)
+        categoria_ingresada = fp.letras("Ingrese la categoría del producto: ").strip()
         categoria_encontrada = fm.es_categoria_valida(categoria_ingresada)
         
         if categoria_encontrada:
@@ -27,26 +27,43 @@ def agregar_productos(productos):
             break
         else: 
             print("ERROR: La categoría ingresada no es válida. Intente nuevamente.")
-
+    
     marcas_permitidas = fm.obtener_marcas_por_categoria(categoria)
     
     while True:
-        print(f"Marcas permitidas para '{categoria.capitalize()}': {', '.join(marcas_permitidas)}")
-        marca = input("Ingrese la marca del producto: ").strip()
+        print(f"Marcas permitidas para '{categoria.capitalize()}':")
+        print('-' * 60)
+        print()
+        fp.imprimir_datos_lista(l_datos= marcas_permitidas)
+        print('-' * 60)
+        print()
+        marca = fp.letras("Ingrese la marca del producto: ")
+        print('-' * 60)
         
         if fm.es_marca_valida_para_categoria(categoria, marca):
             break
         print(f"ERROR: La marca '{marca}' no es válida para la categoría '{categoria}'. Intente nuevamente.")
-
+    
     while True:
-        precio_ingresado = input("Ingrese el precio: ").strip()
+        modelo = input("Ingrese el modelo del producto: ")
+        
+        if modelo =="":
+            print("El nombre del modelo no puede estar vacio.")
+        
+        else:
+            print("Nombre de modelo valido.")
+            break
+    
+    while True:
+        precio_ingresado = fp.valor_numerico("Ingrese el precio: ")
         if fm.validar_precio(precio_ingresado):
             precio = float(precio_ingresado)
             break
         print("ERROR: El precio debe ser un número válido mayor a 0. Intente nuevamente.")
 
     while True:
-        cantidad_ingresada = input("Ingrese la stock: ").strip()
+        cantidad_ingresada = fp.valor_numerico("Ingrese la stock: ")
+        print()
         if fm.validar_cantidad(cantidad_ingresada):
             stock = int(cantidad_ingresada)
             break
@@ -62,78 +79,84 @@ def agregar_productos(productos):
 def proceso_eliminar(productos):
     while True:
         print("\n--- ELIMINAR PRODUCTO ---")
-        codigo_unico = input("Ingrese el código único del producto a eliminar: ")
+        codigo_unico = fp.valor_numerico("Ingrese el código único del producto a eliminar (0 para cancelar): ")
 
-        if codigo_unico.lower() == 'salir':
+        if codigo_unico == 0:
             print("Operación de eliminación cancelada.")
             return False
         
-        eliminado = fm.eliminar(productos, codigo_unico)
+        eliminado = fm.eliminar(productos, str(codigo_unico))
         
         if eliminado:
             print("¡Producto eliminado exitosamente del inventario!")
             return True
         else:
             print("ERROR: No se encontró ningún producto con ese código único.")
-            opcion = fp.s_n("¿Desea intentar con otro código? (s/n): ")
-            if opcion != 's':
-                print("Saliendo del módulo de eliminación...")
-                return False
+            if fp.s_n("¿Desea intentar con otro código? (s/n): ") != True:
+                print('Saliendo...')
+                break
 
 #Permite seleccionar y modificar el modelo, precio o stock de un producto existente.
 def cambiar_dato(productos):
     print("\n"+"="*35)
-    print("   CAMBIAR DATO DE UN PRODUCTO")
+    print("======CAMBIAR DATO DE UN PRODUCTO======")
     print("="*35)
     
-    codigo = input("Ingrese el Código único del producto que desea modificar:  ")
-
-    producto = fm.buscar_producto_cu(productos,codigo)
-    if not producto:
-        print("ERROR: No se encontró ningún producto con ese código.")
-        return
-    
-    print(f"\nProducto encontrado: {producto["modelo"]}")
-    print("¿Qué dato desea modificar?")
-    print("1. Modelo")
-    print("2. Precio")
-    print("3. Cantidad")
-    opcion_mod = fp.valor_numerico("Seleccione una opción (1-3): ")
-
-    match opcion_mod:
-        case 1:
-            nuevo_valor = input("Ingrese el nuevo modelo: ")
-            if not nuevo_valor:
-                print("ERROR: El modelo no puede estar vacío.")
-        case 2:
-            while True:
-                nuevo_precio = input("Ingrese el nuevo precio: ").strip()
-                if fm.validar_precio(nuevo_precio):
-                    nuevo_valor = float(nuevo_precio)
-                    break
-                print("ERROR: El precio debe ser un número válido mayor a 0.")
-        case 3:
-            while True:
-                nueva_cantidad = input("Ingrese la nueva cantidad: ").strip()
-                if fm.validar_cantidad(nueva_cantidad):
-                    nuevo_valor = int(nueva_cantidad)
-                    break
-                print("ERROR: La cantidad debe ser un número válido mayor a 0.")
-        case _:
-            print("Opción no válida. No se hicieron cambios.")
-    actualizado = fm.actualizar_datos_productos(productos,codigo,opcion_mod,nuevo_valor)
-    if actualizado:
-        print("Datos actualizados y guardados éxitosamente!!")
-    else:
-        print("ERROR: Ocurrió un problema al actualizar el producto.")
-        return False
+    while True:
+        codigo = fp.valor_numerico("Ingrese el Código único del producto que desea modificar:  ")
+        
+        producto = fm.buscar_producto_cu(productos,str(codigo))
+        if not producto:
+            print("ERROR: No se encontró ningún producto con ese código.")
+            if fp.s_n('Desea volver a intentar (S/N): ') != True:
+                break
+        else:
+            print(f"\nProducto encontrado: {producto["modelo"]}")
+            print("¿Qué dato desea modificar?")
+            print("1. Modelo")
+            print("2. Precio")
+            print("3. Cantidad")
+            opcion_mod = fp.valor_numerico("Seleccione una opción (1-3): ")
+            
+            match opcion_mod:
+                case 1:
+                    while True:
+                        nuevo_valor = input("Ingrese el nuevo modelo: ")
+                        if not nuevo_valor:
+                            print("ERROR: El modelo no puede estar vacío.")
+                        break
+                case 2:
+                    while True:
+                        nuevo_precio = input("Ingrese el nuevo precio: ").strip()
+                        if fm.validar_precio(nuevo_precio):
+                            nuevo_valor = float(nuevo_precio)
+                            break
+                        print("ERROR: El precio debe ser un número válido mayor a 0.")
+                case 3:
+                    while True:
+                        nueva_cantidad = input("Ingrese la nueva cantidad: ").strip()
+                        if fm.validar_cantidad(nueva_cantidad):
+                            nuevo_valor = int(nueva_cantidad)
+                            break
+                        print("ERROR: La cantidad debe ser un número válido mayor a 0.")
+                case _:
+                    print("Opción no válida. No se hicieron cambios.")
+            actualizado = fm.actualizar_datos_productos(productos, codigo, opcion_mod, nuevo_valor)
+            if actualizado:
+                print("Datos actualizados y guardados éxitosamente!!")
+                if fp.s_n('Desea actualizar otro producto: ') != True:
+                    return True
+            else:
+                print("ERROR: Ocurrió un problema al actualizar el producto.")
+                if fp.s_n('Desea intentar nuevamente: ') != True:
+                    return False
 
 
 
 #Funciones de Cajero:
 #Administra el proceso interactivo de venta de uno o varios productos, 
 # calculando totales y generando facturas y garantías.
-def realizar_venta(productos):
+def realizar_venta(productos, ventas):
     print("="*35)
     print(" "*9,"REALIZAR VENTA")
     print("="*35)
@@ -141,17 +164,16 @@ def realizar_venta(productos):
     detalle_venta = []
     total_venta = 0
 
-    historial_ventas = fm.leer_json("ventas") or []
-    n_fact = fm.asignar_num(historial_ventas,"F")
-    n_garantia = fm.asignar_num(historial_ventas,"G")
+    n_fact = fm.asignar_num(ventas,"F")
+    n_garantia = fm.asignar_num(ventas,"G")
 
     nombre_cliente = fp.validar_nombre("Ingrese el nombre del cliente: ")
     cedula_cliente = fm.pedir_y_validar_cedula()
 
     while True:
-        codigo_unico = input("Ingrese el codigo único del producto a vender (o 'cerrar' para cancelar la venta): ")
+        codigo_unico = fp.valor_numerico("Ingrese el codigo único del producto a vender (o 0 para cancelar la venta): ")
 
-        if codigo_unico.lower() == "cerrar":
+        if codigo_unico == 0:
             break
 
         producto = fm.buscar_producto_cu(productos,codigo_unico)
@@ -198,11 +220,13 @@ def realizar_venta(productos):
             "total": total_venta
         }
 
-        historial_ventas.append(nueva_venta)
-        fm.escribir_json("ventas",historial_ventas)
+        ventas.append(nueva_venta)
+        fp.guardar_json(A_nombre='Ventas',datos= ventas)
         imprimir_factura(n_fact,n_garantia,fecha,hora,nombre_cliente,cedula_cliente,detalle_venta, total_venta)
+        return True
     else:
         print("No se registró ninguna venta.")
+        return False
 
 #Muestra en pantalla el comprobante detallado de la venta con sus respectivos precios y fechas de garantía.
 def imprimir_factura(n_fact,n_garantia,fecha_actual,hora,cliente,cedula,detalle_venta, total_general):
