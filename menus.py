@@ -18,13 +18,14 @@ def menus(historial, user, cargo, empleados, productos, ventas):
 #Despliega las opciones de gestión, alta y baja de personal para los administradores.
 def menu_administradores(historial, user, empleados):
         while True:
-            print("---BIENVENIDO AL SISTEMA---")
-            print("Opciones de Administrador: ")
+            print("------MENU ADMINISTRADOR------")
+            print()
             print("1. Busqueda y Actualización de Empleados")
             print("2. Dar de Alta Empleados")
             print("3. Dar de Baja Empleados")
             print("4. Visualizar Empleados")
-            print("5. Salir del Sistema")
+            print("5. Menu Historial")
+            print("6. Salir del Sistema")
             opcion = fp.valor_numerico("Escoja una opción (1-5): ")
             match opcion:
                 case 1:
@@ -43,6 +44,11 @@ def menu_administradores(historial, user, empleados):
                     fp.imprimir_datos(l_datos=empleados)
                     rh(historial=historial, user= user, accion='Reviso datos de los empleados')
                 case 5:
+                    exito = gp.historial(historial= historial)
+                    if exito:
+                        rh(historial=historial, user= user, accion='Realizp imprecion delhistorial')
+                    
+                case 6:
                     print("Saliendo del sistema...")
                     rh(historial=historial, user= user, accion='Cerro sesion')
                     return False

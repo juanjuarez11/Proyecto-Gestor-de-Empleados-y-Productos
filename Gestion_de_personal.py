@@ -136,3 +136,27 @@ def Actualizar_datos(empleados):
                 continue
             break
         break
+def historial(historial):
+    
+    while True:
+        print('----------Historial----------')
+        print()
+        print('1. Mostrar todo el historial')
+        print('2. Salir al menu de administrador')
+        print()
+        
+        opcion = f_original.valor_numerico('Ingrese su opcion: ')
+        
+        match opcion:
+        
+            case 1:
+                print()
+                print('-' * 80)
+                historial.mostrar_historial()
+                print()
+                print('-' * 80)
+                print()
+                if f_original.s_n('Desea volver al menu del historial: ') != True:
+                    return True
+            case 2:
+                return False
