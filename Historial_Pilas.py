@@ -45,7 +45,9 @@ class PilaHistorial:
             return
         
         # Invertimos la lectura para mostrar el tope primero
+        print()
         print("\n=== HISTORIAL (De mas reciente a mas antiguo) ===")
+        print()
         for registro in reversed(self.__items):
             print(registro)
             

@@ -22,5 +22,13 @@
         "cargo": "Cajero",
         "salario": "13000",
         "estado": "Activo"
+    },
+    {
+        "nombre": "Pe Dro",
+        "correo": "denis@gmail.com",
+        "carnet": "K6YLAGDG",
+        "cargo": "Asistente",
+        "salario": "14000",
+        "estado": "Activo"
     }
 ]
