@@ -9,6 +9,7 @@ def ejecutar_proceso():
     empleados = lj(A_nombre= 'Empleados')
     productos = lj(A_nombre= 'Productos')
     ventas = lj(A_nombre= 'Ventas')
+    ordenes = lj(A_nombre= 'Ordenes')
     historial = hp.PilaHistorial()
     historial.cargar_historial_json()
     while True:
@@ -44,7 +45,7 @@ def ejecutar_proceso():
         while inicio_sesion:
             hp.registrar_historial(historial= historial, user=user_p , accion= f'Inicio sesion como {cargo}')
             
-            if menus.menus(historial=historial, user= perfil[t_user], cargo= cargo, productos= productos,ventas=ventas,empleados=empleados) != True:
+            if menus.menus(historial=historial, user= perfil[t_user], cargo= cargo, productos= productos,ventas=ventas,empleados=empleados, ordenes= ordenes) != True:
                 break
 
 if __name__ == '__main__':

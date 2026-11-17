@@ -36,7 +36,7 @@ def Alta_integ(empleados):
         carnet =logic.asignar_carnet(empleados=empleados)
         
         # 4. Validación de Cargo
-        print("Cargos disponibles: ---Supervisor---Asistente---Presentador---Limpieza---Cajero---")
+        print("Cargos disponibles: ---Supervisor---Tecnico---Asistente---Presentador---Limpieza---Cajero---")
         print('-' * 70)
         cargo = f_original.letras("Cargo: ")
         print('-' * 70)
@@ -59,7 +59,7 @@ def Alta_integ(empleados):
             return
         
         # 6. Guardar el registro en la lista y en el JSON
-        logic.registrar(nom, correo, carnet, cargo, str(salario), estado, empleados)
+        logic.registrar(nom, correo, carnet, cargo.lower(), str(salario), estado, empleados)
         if f_original.s_n('Desea volver a registrar otro empleado (S/N): ') != True:
             break
     

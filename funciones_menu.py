@@ -5,7 +5,7 @@ import re, random, string
 categorias = ["Celular","Laptop","Computadora de Escritorio","Teclado Alambrico",
             "Teclado Inalambrico","Mouse Alambrico","Mouse Inalambrico"]
 
-marcas_celulares = ["Samsung","Apple","Xiaomi","Google","Huawei","Motorola"]
+marcas_celulares = ["Samsung","Apple","Xiaomi","Google","Huawei","Motorola","Infinix"]
 marcas_laptops_escritorio = ["Lenovo","HP","Dell","Apple","ASUS","MSI"]
 marcas_teclados = ["Logitech","Microsoft","Keychron","Razer","Corsair","Redragon","VSG"]
 marcas_mouses = ["Logitech","Microsoft","Logitech G","Razer","Corsair","Redragon","SteelSeries"]
@@ -86,11 +86,11 @@ def es_marca_valida_para_categoria(categoria, marca):
     resultado = busqueda_binaria(lista_marcas,marca)
     return resultado is not None
 
-#Valida que el precio ingresado sea un número flotante mayor a cero.
+#Valida que el precio ingresado sea un número flotante mayor a cero y menor a un numero ilogico para un producto.
 def validar_precio(p):
     try:
         precio = float(p)
-        return precio > 0
+        return precio > 0 and precio < 150000
     except ValueError:
         return False
 

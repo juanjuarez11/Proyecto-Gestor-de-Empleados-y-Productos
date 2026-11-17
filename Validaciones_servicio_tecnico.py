@@ -1,5 +1,5 @@
 from datetime import date # date: la fecha de hoy, para revisar si la garantia vencio
-
+import Prueba
 
 #    Orden por secciones
 #
@@ -31,7 +31,7 @@ def validar_ticket_garantia(registro, ticket_garantia):
     Que hace: comprueba que el ticket de garantia sea el de esa factura.
     Como funciona: compara lo escrito (en mayuscula) con el de la factura.
     """
-    return registro["ticket_garantia"] == ticket_garantia.upper()
+    return registro["n_garantia"] == ticket_garantia.upper()
 
 
 def validar_garantia_vigente(registro):
@@ -39,7 +39,7 @@ def validar_garantia_vigente(registro):
     Que hace: dice si la garantia de la factura todavia sirve.
     Como funciona: compara la fecha garantia_hasta con la de hoy (True si no paso).
     """
-    fecha_vencimiento = date.fromisoformat(registro["garantia_hasta"])
+    fecha_vencimiento = date.fromisoformat(Prueba.obtener_detalles(detalle='fecha_garantia', ventas= registro))
     return fecha_vencimiento >= date.today()
 
 

@@ -1,0 +1,38 @@
+[
+    {
+        "ticket": "T-001",
+        "ticket_compra": "F-001",
+        "imei_serie": "619907226758762",
+        "falla": "apagado repentino",
+        "falla_encontrada": "Bateria danada",
+        "estado": "Entregado",
+        "solucion": "",
+        "fecha_entrega": "17/11/2026",
+        "dias_garantia": 30,
+        "fecha_vencimiento": "17/12/2026"
+    },
+    {
+        "ticket": "T-002",
+        "ticket_compra": "F-001",
+        "imei_serie": "619907226758762",
+        "falla": "Nuavo apagado",
+        "falla_encontrada": "kola.py",
+        "estado": "Entregado",
+        "solucion": "",
+        "fecha_entrega": "17/11/2026",
+        "dias_garantia": 25,
+        "fecha_vencimiento": "12/12/2026"
+    },
+    {
+        "ticket": "T-003",
+        "ticket_compra": "F-002",
+        "imei_serie": "644129597827737",
+        "falla": "Pantallazo azul",
+        "falla_encontrada": "dano interno de la placa",
+        "estado": "No reparado",
+        "solucion": "Cambio por equipo del mismo precio o modelo",
+        "fecha_entrega": "",
+        "dias_garantia": 0,
+        "fecha_vencimiento": ""
+    }
+]

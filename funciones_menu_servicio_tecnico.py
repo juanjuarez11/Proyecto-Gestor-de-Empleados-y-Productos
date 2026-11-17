@@ -1,6 +1,7 @@
 import json # guardar y leer las ordenes en un archivo
 import os # saber si ese archivo ya existe
 from datetime import date, timedelta # date: fecha de hoy; timedelta: sumar los dias de garantia
+import Prueba
 from Validaciones_servicio_tecnico import (
     validar_garantia_vigente,
     pedir_opcion,
@@ -54,10 +55,10 @@ archivo_de_ordenes = "ordenes_servicio_tecnico.json"
 # Campos de la factura que no son datos del equipo y no se muestran
 campos_control = (
     "ticket",
-    "codigo_factura",
-    "ticket_garantia",
-    "fecha_factura",
-    "garantia_hasta",
+    "factura",
+    "n_garantia",
+    "fecha_actual",
+    "fecha_garantia",
 )
 
 
@@ -181,7 +182,7 @@ def buscar_ticket_compra(tickets_tienda, ticket_compra):
     """
     codigo = ticket_compra.upper()
     for registro in tickets_tienda:
-        if registro["codigo_factura"] == codigo:
+        if registro["factura"] == codigo:
             return registro
     return None
 
@@ -207,8 +208,8 @@ def crear_orden(ticket, registro_compra, falla):
     """
     orden = {
         "ticket": ticket,
-        "ticket_compra": registro_compra["codigo_factura"],
-        "imei_serie": str(registro_compra["imei"]),
+        "ticket_compra": registro_compra["factura"],
+        "imei_serie": str(Prueba.obtener_detalle(detalle='imei', factura=registro_compra)),
         "falla": falla,
         "falla_encontrada": "",
         "estado": "En diagnostico",
@@ -346,9 +347,17 @@ def mostrar_datos_equipo(registro):
     """
     print("\nDatos del equipo encontrados en la tienda:")
     print("-" * 40)
-    for campo in registro:
-        if campo not in campos_control:
+    for campo,valor in registro.items():
+        
+        if campo == 'detalle':
+            for i in valor:
+                for e,l in i.items():
+                    if i not in campos_control:
+                        print(f"  {e}: {l}")
+                    
+        if campo not in campos_control and campo != 'detalle':
             print(f"  {campo}: {registro[campo]}")
+            
     print("-" * 40)
 
 
@@ -427,18 +436,18 @@ def recibir_equipo(tickets_tienda, ordenes):
     if not pedir_ticket_garantia(registro):
         print("Registro cancelado. Volviendo al menu de servicio tecnico.")
         return
-    if not validar_garantia_vigente(registro):
+    if not validar_garantia_vigente(registro= tickets_tienda):
         print("La garantia de este ticket ya vencio.")
         print("No se puede registrar este equipo. Puede intentar con otra factura.")
         return
 
-    abierta = buscar_orden_abierta(ordenes, registro["codigo_factura"])
+    abierta = buscar_orden_abierta(ordenes, registro["factura"])
     if abierta is not None:
         print(f"Este equipo ya fue recibido, tiene la orden {abierta['ticket']} abierta "
-              f"({abierta['estado']}).")
+            f"({abierta['estado']}).")
         return
 
-    mostrar_datos_equipo(registro)
+    mostrar_datos_equipo(registro=registro)
     falla = pedir_falla("Falla reportada por el cliente (0 para cancelar): ")
     if falla is None:
         print("Registro cancelado. Volviendo al menu de servicio tecnico.")

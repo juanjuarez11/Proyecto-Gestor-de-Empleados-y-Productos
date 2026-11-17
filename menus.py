@@ -1,8 +1,9 @@
 import Funciones_Proyecto as fp, funciones_empleados as fe, Gestion_de_personal as gp
 from Historial_Pilas import registrar_historial as rh
+import menu_de_servicio_tecnico as mst
 #Controla el flujo principal de ejecución y redirige al menú correspondiente según el rol autenticado.
 
-def menus(historial, user, cargo, empleados, productos, ventas):
+def menus(historial, user, cargo, empleados, productos, ventas, ordenes):
     while True:
 
         if cargo == "administrador":
@@ -13,6 +14,9 @@ def menus(historial, user, cargo, empleados, productos, ventas):
                 return False
         elif cargo == "cajero":
             if menu_cajero(historial= historial,user= user, productos=productos, ventas= ventas) != True:
+                return False
+        elif cargo == "tecnico":
+            if menu_tecnico(ventas, ordenes) != True:
                 return False
 
 #Despliega las opciones de gestión, alta y baja de personal para los administradores.
@@ -128,3 +132,7 @@ def menu_cajero(historial, user, productos, ventas):
                 return False
             case _:
                 print("Opción no válida.")
+                
+#Despliega el menú correspondiente al rol de técnico.
+def menu_tecnico(ventas, ordenes):
+    mst.ejecutar_menu(tickets_tienda= ventas, ordenes= ordenes)

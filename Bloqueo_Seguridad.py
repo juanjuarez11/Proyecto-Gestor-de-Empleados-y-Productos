@@ -153,7 +153,7 @@ def validar_acceso_cargo(exito,usuario):
             cargo = 'administrador'
             return cargo
             
-        elif cargo in ["supervisor", "cajero"]:
+        elif cargo in ["supervisor", "cajero", "tecnico"]:
             return cargo
             
         else:

@@ -61,7 +61,7 @@ def actualizar_carnet(empleados, carnet):
 
 def actualizar_cargo(empleados, carnet):
     while True:
-        print("Cargos disponibles: ---Supervisor---Tecnico---Cajero---")
+        print("Cargos disponibles: ---Supervisor---Tecnico---Asistente---Presentador---Limpieza---Cajero---")
         cargo = f_original.letras("Nuevo cargo: ")
         if not logic.val_cargo(cargo=cargo):
             print(" El cargo ingresado es inválido.\n")

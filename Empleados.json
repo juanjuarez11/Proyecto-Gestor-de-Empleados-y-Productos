@@ -19,15 +19,15 @@
         "nombre": "Alex Orozco",
         "correo": "alex200@gmail.com",
         "carnet": "565TAJOU",
-        "cargo": "Cajero",
+        "cargo": "cajero",
         "salario": "13000",
         "estado": "Activo"
     },
     {
-        "nombre": "Pe Dro",
+        "nombre": "Pedro",
         "correo": "denis@gmail.com",
         "carnet": "K6YLAGDG",
-        "cargo": "Asistente",
+        "cargo": "tecnico",
         "salario": "14000",
         "estado": "Activo"
     }

@@ -10,7 +10,7 @@ def val_Two(clave, valor, empleados):
 
 # Valida si el cargo ingresado pertenece a los permitidos.
 def val_cargo(cargo):
-    cargos_validos = ["supervisor", "cajero", "limpieza", "asistente", "presentador"]
+    cargos_validos = ["supervisor", "cajero", "limpieza", "asistente", "presentador", "tecnico"]
     return cargo.lower() in cargos_validos
 
 # Retorna el salario predeterminado según el cargo.
